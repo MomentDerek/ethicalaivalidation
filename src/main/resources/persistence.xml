@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:mysql://localhost:3306/ethicalaivalidation</property>
+    <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Answer"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Company"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Ethicalconcerns"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Principles"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Projectassign"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Projects"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Projectvalidation"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Questionfeedback"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Questions"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Questionstatus"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Questiontype"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Segments"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Segmentsummary"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Subquestions"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Users"/>
+      <mapping class="com.sydney.au.ethicalaivalidation.domain.Validatorfeedback"/>
+      <!-- <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>
