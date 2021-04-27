@@ -23,9 +23,17 @@ public class Subquestions {
     public Subquestions() {
     }
 
+    public Subquestions(int questionid, String content, int questiontype, Timestamp createdtime, int level) {
+        this.questionid = questionid;
+        this.content = content;
+        this.questiontype = questiontype;
+        this.createdtime = createdtime;
+        this.level = level;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }

@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author: Xin Lin on 11/2/2020
@@ -17,6 +18,9 @@ import java.util.List;
 public interface QuestionsRepository extends CrudRepository<Questions, Integer> {
 
     List<Questions> findBySegmentidIn(List<Integer> segmenId);
+
     List<Questions> findBySegmentid(Integer segmenId);
+
+    Optional<Questions> findBySegmentidAndAndQuestioncontent(Integer segmentId, String questionContent);
 
 }

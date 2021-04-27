@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RestController("/questionnairelist")
+@RestController
+@RequestMapping("/questionnairelist")
 public class ValidatorController {
 
     private final ValidatorService validatorService;

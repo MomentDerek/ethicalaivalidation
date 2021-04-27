@@ -16,7 +16,6 @@ public class Principles {
     private String principlename;
 
     public Principles() {
-
     }
 
     public Principles(String principlename) {
