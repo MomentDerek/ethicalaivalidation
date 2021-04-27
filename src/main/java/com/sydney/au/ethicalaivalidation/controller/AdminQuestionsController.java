@@ -181,4 +181,17 @@ public class AdminQuestionsController {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{subquestionid}")
+    public @ResponseBody
+    ResponseEntity<Object> updateSubQuestionDetail(@PathVariable("subquestionid") Integer subQuestionId,
+                                                   @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (adminQuestionsService.deleteSubQuestion(subQuestionId)) return new ResponseEntity<>(HttpStatus.OK);
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }

@@ -239,5 +239,13 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
         return true;
     }
 
+    @Override
+    public boolean deleteSubQuestion(Integer subQuestionId) {
+        Optional<Subquestions> subQuestionOpt = subquestionsRepository.findById(subQuestionId);
+        if (!subQuestionOpt.isPresent()) return false;
+        subquestionsRepository.deleteById(subQuestionId);
+        return true;
+    }
+
 
 }

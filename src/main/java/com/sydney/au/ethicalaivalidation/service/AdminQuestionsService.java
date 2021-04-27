@@ -32,4 +32,6 @@ public interface AdminQuestionsService {
                               String subQuestionContent,
                               Integer questionType,
                               Integer answer);
+
+    boolean deleteSubQuestion(Integer subQuestionId);
 }
