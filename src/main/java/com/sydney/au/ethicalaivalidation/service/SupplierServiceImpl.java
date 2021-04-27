@@ -65,6 +65,7 @@ public class SupplierServiceImpl implements SupplierService {
         projectsRepository.findAllById(projectIdList).forEach(x -> {
             if (x.getStatus() == 2
                     || x.getStatus() == 3
+                    || x.getStatus() == 4
                     || x.getStatus() == 5)
                 allById.add(x);
         });
