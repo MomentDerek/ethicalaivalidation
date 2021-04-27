@@ -103,9 +103,7 @@ public class SupplierServiceImpl implements SupplierService {
                 userContainFlag.set(true);
                 //如果此时该user处于lock状态，解锁
                 if (x.getLocked() == 2) {
-                    x.setLocked(1);
-                    x.setLockedquestion(0);
-                    projectassignRepository.save(x);
+                    projectassignRepository.unLockByProjectIdAndSupplierId(projects.getId(), supplier.getId());
                 }
             }
             if (x.getLocked() == 2) {
@@ -143,11 +141,11 @@ public class SupplierServiceImpl implements SupplierService {
         Users supplier = usersRepository.findByUsername(userName);
         Projects projects = projectsRepository.findByProjectname(projectName);
         //去projectassign上锁
-        Projectassign lock = projectassignRepository.findByProjectidAndSupplierid(projects.getId(), supplier.getId());
-        lock.setLocked(2);
-        lock.setLockedquestion(Integer.parseInt(questionId));
-        lock.setLockedtime(ServiceUtils.getNowTimeStamp());
-        projectassignRepository.save(lock);
+        projectassignRepository.lockByProjectIdAndSupplierId(
+                projects.getId(),
+                supplier.getId(),
+                Integer.parseInt(questionId),
+                ServiceUtils.getNowTimeStamp());
         //获取具体信息
         Questions question = questionsRepository.findById(Integer.parseInt(questionId)).get();
         Subquestions subquestion = subquestionsRepository.findById(Integer.parseInt(subquesId)).get();
