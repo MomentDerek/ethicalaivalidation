@@ -49,7 +49,7 @@ public class AdminQuestionsController {
 
     @GetMapping("/{principleid}/segments")
     public @ResponseBody
-    ResponseEntity<Object> listSegmentByPrinciple(@RequestParam("principleid") Integer principleId,
+    ResponseEntity<Object> listSegmentByPrinciple(@PathVariable("principleid") Integer principleId,
                                                   @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -59,7 +59,7 @@ public class AdminQuestionsController {
 
     @GetMapping("/{principleid}/{segmentid}/questions")
     public @ResponseBody
-    ResponseEntity<Object> listQuestionBySegment(@RequestParam("principleid") Integer segmentId,
+    ResponseEntity<Object> listQuestionBySegment(@PathVariable("segmentid") Integer segmentId,
                                                  @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -138,6 +138,47 @@ public class AdminQuestionsController {
             TreeMap<String, Object> res = new TreeMap<>();
             res.put("message", "This subquestion already exists, please enter other content!");
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/questiontype")
+    public @ResponseBody
+    ResponseEntity<Object> listQuestionType(@AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(adminQuestionsService.listAllQuestionType(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{subquestionid}")
+    public @ResponseBody
+    ResponseEntity<Object> getSubQuestionDetail(@PathVariable("subquestionid") Integer subQuestionId,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Map<String, Object> res = adminQuestionsService.getSubQuestionDetail(subQuestionId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PutMapping("/{subquestionid}")
+    public @ResponseBody
+    ResponseEntity<Object> updateSubQuestionDetail(@PathVariable("subquestionid") Integer subQuestionId,
+                                                   @RequestBody Map<String, Object> reqMap,
+                                                   @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        boolean res = adminQuestionsService.updateSubQuestion(
+                (Integer) reqMap.get("principleid"),
+                (Integer) reqMap.get("segmentid"),
+                (Integer) reqMap.get("questionid"),
+                subQuestionId,
+                String.valueOf(reqMap.get("subquestion")),
+                (Integer) reqMap.get("questiontype"),
+                (Integer) reqMap.get("answer"));
+        if (res) return new ResponseEntity<>(res, HttpStatus.OK);
+        else {
+            TreeMap<String, String> message = new TreeMap<>();
+            message.put("message", "Information conflict!");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
     }
 }

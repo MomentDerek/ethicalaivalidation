@@ -4,11 +4,9 @@ import com.sydney.au.ethicalaivalidation.domain.*;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
 import org.springframework.stereotype.Service;
+import sun.jvm.hotspot.oops.Oop;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 public class AdminQuestionsServiceImpl implements AdminQuestionsService {
@@ -182,6 +180,62 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
                 level);
         subquestionsRepository.save(newSubQuestion);
         answerRepository.save(new Answer(newSubQuestion.getId(), answer, 1));
+        return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> listAllQuestionType() {
+        List<Questiontype> types = new ArrayList<>();
+        questiontypeRepository.findAll().forEach(types::add);
+        //构建结果
+        List<Map<String, Object>> res = new ArrayList<>();
+        types.parallelStream().forEach(type -> {
+            Map<String, Object> typeMap = new TreeMap<>();
+            typeMap.put("questiontypeid", type.getId());
+            typeMap.put("questiontype", type.getType());
+            res.add(typeMap);
+        });
+        return res;
+    }
+
+    @Override
+    public Map<String, Object> getSubQuestionDetail(Integer subQuestionId) {
+        Optional<Subquestions> subQuestionOptional = subquestionsRepository.findById(subQuestionId);
+        if (!subQuestionOptional.isPresent()) return new TreeMap<>();
+        Subquestions subQuestion = subQuestionOptional.get();
+        int questionId = subQuestion.getQuestionid();
+        Questions question = questionsRepository.findById(questionId).get();
+        int segmentId = question.getSegmentid();
+        Segments segment = segmentsRepository.findById(segmentId).get();
+        int principleId = segment.getPrincipleid();
+        Principles principle = principlesRepository.findById(principleId).get();
+        //构建结果
+        Map<String, Object> res = new TreeMap<>();
+        res.put("principleid", principleId);
+        res.put("principle", principle.getPrinciplename());
+        res.put("segmentid", segmentId);
+        res.put("segment", segment.getSegmentname());
+        res.put("questionid", questionId);
+        res.put("question", question.getQuestioncontent());
+        res.put("subquescontent", subQuestion.getContent());
+        res.put("questiontype", questiontypeRepository.findById(subQuestion.getQuestiontype()).get());
+        res.put("answer", answerRepository.findBySubquesid(subQuestionId));
+        res.put("createdtime", subQuestion.getCreatedtime());
+        return res;
+    }
+
+    @Override
+    public boolean updateSubQuestion(Integer principleId, Integer segmentId, Integer questionId, Integer subQuestionId, String subQuestionContent, Integer questionType, Integer answer) {
+        Optional<Subquestions> subQuestionOpt = subquestionsRepository.findById(subQuestionId);
+        if (!subQuestionOpt.isPresent()) return false;
+        //TODO 此处可加principleID，segmentID，QuestionID的验证
+        try {
+            subquestionsRepository.updateDetailById(subQuestionId, subQuestionContent, questionType);
+            answerRepository.updateAnswerBySubQuestionId(subQuestionId, answer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

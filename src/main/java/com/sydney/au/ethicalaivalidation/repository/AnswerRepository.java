@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Answer;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,6 @@ public interface AnswerRepository extends CrudRepository<Answer, Integer> {
 
     List<Answer> findBySubquesid(Integer subQuestionId);
 
+    @Query(nativeQuery = true, value = "update answer set answer =?2 where subquesid = ?1")
+    void updateAnswerBySubQuestionId(Integer subQuestionId, Integer answer);
 }

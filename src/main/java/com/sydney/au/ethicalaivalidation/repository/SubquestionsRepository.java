@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Subquestions;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,8 @@ public interface SubquestionsRepository extends CrudRepository<Subquestions, Int
 
     List<Subquestions> findByQuestionid(Integer questionId);
 
-
     Optional<Subquestions> findByQuestionidAndContent(Integer questionId, String content);
+
+    @Query(nativeQuery = true, value = "update subquestions set content = ?2 , questiontype = ?3 where id = ?1")
+    void updateDetailById(Integer subQuestionId, String content, Integer type);
 }
