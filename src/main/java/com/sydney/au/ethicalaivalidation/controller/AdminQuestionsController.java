@@ -67,7 +67,7 @@ public class AdminQuestionsController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/{principleid}/{segmentid}/questions")
+    @GetMapping("/addprinciple")
     public @ResponseBody
     ResponseEntity<Object> checkAdmin(@AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
