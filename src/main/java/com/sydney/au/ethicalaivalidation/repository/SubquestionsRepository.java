@@ -20,6 +20,8 @@ public interface SubquestionsRepository extends CrudRepository<Subquestions, Int
 
     List<Subquestions> findByQuestionidIn(List<Integer> questionId);
 
+    List<Subquestions> findByIdNotIn(List<Integer> questionId);
+
     List<Subquestions> findByQuestionid(Integer questionId);
 
     Optional<Subquestions> findByQuestionidAndContent(Integer questionId, String content);

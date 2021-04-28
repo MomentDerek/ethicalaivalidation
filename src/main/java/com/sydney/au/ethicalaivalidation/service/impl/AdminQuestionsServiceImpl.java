@@ -11,40 +11,20 @@ import java.util.*;
 @Service
 public class AdminQuestionsServiceImpl implements AdminQuestionsService {
 
-    private final UsersRepository usersRepository;
-    private final ProjectassignRepository projectassignRepository;
-    private final ProjectsRepository projectsRepository;
-    private final CompanyRepository companyRepository;
-    private final EthicalconcernsRepository ethicalconcernsRepository;
     private final QuestionsRepository questionsRepository;
     private final SegmentsRepository segmentsRepository;
     private final QuestiontypeRepository questiontypeRepository;
     private final SubquestionsRepository subquestionsRepository;
     private final PrinciplesRepository principlesRepository;
     private final AnswerRepository answerRepository;
-    private final ValidatorfeedbackRepository validatorfeedbackRepository;
-    private final QuestionfeedbackRepository questionfeedbackRepository;
-    private final ProjectvalidationRepository projectvalidationRepository;
-    private final SegmentsummaryRepository segmentsummaryRepository;
-    private final QuestionstatusRepository questionstatusRepository;
 
-    public AdminQuestionsServiceImpl(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, ProjectvalidationRepository projectvalidationRepository, SegmentsummaryRepository segmentsummaryRepository, QuestionstatusRepository questionstatusRepository) {
-        this.usersRepository = usersRepository;
-        this.projectassignRepository = projectassignRepository;
-        this.projectsRepository = projectsRepository;
-        this.companyRepository = companyRepository;
-        this.ethicalconcernsRepository = ethicalconcernsRepository;
+    public AdminQuestionsServiceImpl(QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository) {
         this.questionsRepository = questionsRepository;
         this.segmentsRepository = segmentsRepository;
         this.questiontypeRepository = questiontypeRepository;
         this.subquestionsRepository = subquestionsRepository;
         this.principlesRepository = principlesRepository;
         this.answerRepository = answerRepository;
-        this.validatorfeedbackRepository = validatorfeedbackRepository;
-        this.questionfeedbackRepository = questionfeedbackRepository;
-        this.projectvalidationRepository = projectvalidationRepository;
-        this.segmentsummaryRepository = segmentsummaryRepository;
-        this.questionstatusRepository = questionstatusRepository;
     }
 
     @Override

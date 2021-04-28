@@ -21,6 +21,8 @@ public interface QuestionsRepository extends CrudRepository<Questions, Integer> 
 
     List<Questions> findBySegmentid(Integer segmenId);
 
+    List<Questions> findByIdIn(List<Integer> questionId);
+
     Optional<Questions> findBySegmentidAndAndQuestioncontent(Integer segmentId, String questionContent);
 
 }
