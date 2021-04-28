@@ -23,8 +23,6 @@ public interface ProjectassignRepository extends CrudRepository<Projectassign, I
 
     List<Projectassign> findByProjectid(Integer projectId);
 
-    Projectassign findByProjectidAndSupplierid(Integer projectId, Integer supplierId);
-
     @Query(nativeQuery = true, value = "update projectassign set locked = 1 where projectid = ?1 and supplierid = ?2")
     void unLockByProjectIdAndSupplierId(Integer projectId, Integer supplierId);
 

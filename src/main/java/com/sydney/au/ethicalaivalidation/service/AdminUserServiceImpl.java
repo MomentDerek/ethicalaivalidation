@@ -98,7 +98,28 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public Map<String, Object> getUserDetail(Integer userId) {
-        return null;
+    public Map<String, Object> getUserDetail(String userName) {
+        Users user = usersRepository.findByUsername(userName);
+        TreeMap<String, Object> res = new TreeMap<>();
+        res.put("username", user.getUsername());
+        res.put("createdtime", user.getCreatedtime());
+        res.put("company", companyRepository.findById(user.getCompanyid()).get());
+        res.put("email", user.getEmail());
+        String[] types = {"supplier admin", "supplier", "validator", "admin"};
+        res.put("usertype", types[user.getUsertype() - 1]);
+        res.put("firstname", user.getFirstname());
+        res.put("lastname", user.getLastname());
+        res.put("address1", user.getAddress1());
+        res.put("address2", user.getAddress2());
+        res.put("phone", user.getPhone());
+        return res;
+    }
+
+    @Override
+    public boolean deleteUser(String userName) {
+        Users user = usersRepository.findByUsername(userName);
+        if (user == null) return false;
+        usersRepository.deleteById(user.getId());
+        return true;
     }
 }

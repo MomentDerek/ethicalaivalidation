@@ -9,5 +9,7 @@ public interface AdminUserService {
 
     List<Map<String, Object>> listAllUserByType(String type);
 
-    Map<String, Object> getUserDetail(Integer userId);
+    Map<String, Object> getUserDetail(String userName);
+
+    boolean deleteUser(String userName);
 }

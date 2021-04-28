@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/admin/user")
@@ -48,12 +49,24 @@ public class AdminUserController {
 
     @GetMapping("/userlist/{username}")
     public @ResponseBody
-    ResponseEntity<Object> getUserDetail(@AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<Object> getUserDetail(@PathVariable("username") String userName,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        List<Map<String, Object>> res = adminUserService.listAllUser();
+        Map<String, Object> res = adminUserService.getUserDetail(userName);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @DeleteMapping("/userlist/{username}")
+    public @ResponseBody
+    ResponseEntity<Object> deleteUser(@PathVariable("username") String userName,
+                                      @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (adminUserService.deleteUser(userName)) return new ResponseEntity<>(HttpStatus.OK);
+        TreeMap<String, String> res = new TreeMap<>();
+        res.put("message", "Wrong username!");
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+    }
 
 }
