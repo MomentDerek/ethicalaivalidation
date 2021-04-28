@@ -81,7 +81,7 @@ public class AdminProjectServiceImpl implements AdminProjectService {
         //构建supplier信息
         List<Map<String, Object>> suppliers = suppliersInfo.parallelStream().map(supplier -> {
             Map<String, Object> supplierMap = new TreeMap<>();
-            int id = supplier.getId();
+            int id = supplier.getSupplierid();
             Users supplierInfo = userInfos.get(id);
             supplierMap.put("id", id);
             supplierMap.put("name", supplierInfo.getUsername());
@@ -90,7 +90,7 @@ public class AdminProjectServiceImpl implements AdminProjectService {
         //构建validator信息
         List<Map<String, Object>> validators = validatorsInfo.parallelStream().map(validator -> {
             Map<String, Object> validatorMap = new TreeMap<>();
-            int id = validator.getId();
+            int id = validator.getValidatorid();
             Users validatorInfo = userInfos.get(id);
             validatorMap.put("id", id);
             validatorMap.put("name", validatorInfo.getUsername());
