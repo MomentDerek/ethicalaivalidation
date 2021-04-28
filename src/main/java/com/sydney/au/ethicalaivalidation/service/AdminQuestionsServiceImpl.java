@@ -171,7 +171,6 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
         }
         Optional<Subquestions> subquestionOptional = subquestionsRepository.findByQuestionid(questionId)
                 .stream().max((a, b) -> a.getLevel() > b.getLevel() ? 1 : -1);
-
         int level = subquestionOptional.map(subQuestion -> subQuestion
                 .getLevel() + 1).orElse(0);
         Subquestions newSubQuestion = new Subquestions(

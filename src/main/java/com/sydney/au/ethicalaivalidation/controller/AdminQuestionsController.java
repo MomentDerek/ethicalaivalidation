@@ -77,7 +77,7 @@ public class AdminQuestionsController {
 
     @PostMapping("/addprinciple")
     public @ResponseBody
-    ResponseEntity<Object> addPrinciple(Map<String, Object> reqMap,
+    ResponseEntity<Object> addPrinciple(@RequestBody Map<String, Object> reqMap,
                                         @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -92,7 +92,7 @@ public class AdminQuestionsController {
 
     @PostMapping("/addsegment")
     public @ResponseBody
-    ResponseEntity<Object> addSegment(Map<String, Object> reqMap,
+    ResponseEntity<Object> addSegment(@RequestBody Map<String, Object> reqMap,
                                       @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -107,7 +107,7 @@ public class AdminQuestionsController {
 
     @PostMapping("/addquestion")
     public @ResponseBody
-    ResponseEntity<Object> addQuestion(Map<String, Object> reqMap,
+    ResponseEntity<Object> addQuestion(@RequestBody Map<String, Object> reqMap,
                                        @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -124,7 +124,7 @@ public class AdminQuestionsController {
 
     @PostMapping("/addsubquestion")
     public @ResponseBody
-    ResponseEntity<Object> addSubQuestion(Map<String, Object> reqMap,
+    ResponseEntity<Object> addSubQuestion(@RequestBody Map<String, Object> reqMap,
                                           @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
