@@ -169,9 +169,11 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
         if (subquestionsRepository.findByQuestionidAndContent(questionId, SubQuestionContent).isPresent()) {
             return false;
         }
-        int level = subquestionsRepository.findByQuestionid(questionId)
-                .stream().max((a, b) -> a.getLevel() > b.getLevel() ? 1 : -1).get()
-                .getLevel() + 1;
+        Optional<Subquestions> subquestionOptional = subquestionsRepository.findByQuestionid(questionId)
+                .stream().max((a, b) -> a.getLevel() > b.getLevel() ? 1 : -1);
+
+        int level = subquestionOptional.map(subQuestion -> subQuestion
+                .getLevel() + 1).orElse(0);
         Subquestions newSubQuestion = new Subquestions(
                 questionId,
                 SubQuestionContent,
