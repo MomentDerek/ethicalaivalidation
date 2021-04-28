@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/admin/users")
 public class AdminUserController {
 
     private final AdminUserService adminUserService;

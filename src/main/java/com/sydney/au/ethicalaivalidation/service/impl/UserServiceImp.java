@@ -1,10 +1,12 @@
-package com.sydney.au.ethicalaivalidation.service;
+package com.sydney.au.ethicalaivalidation.service.impl;
 
 import com.sydney.au.ethicalaivalidation.domain.Company;
 import com.sydney.au.ethicalaivalidation.domain.Users;
 import com.sydney.au.ethicalaivalidation.repository.CompanyRepository;
 import com.sydney.au.ethicalaivalidation.repository.UsersRepository;
 import com.sydney.au.ethicalaivalidation.security.JwtTokenProvider;
+import com.sydney.au.ethicalaivalidation.service.AsynchronousService;
+import com.sydney.au.ethicalaivalidation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;

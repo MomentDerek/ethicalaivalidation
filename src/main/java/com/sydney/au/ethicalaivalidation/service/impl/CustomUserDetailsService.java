@@ -1,6 +1,7 @@
-package com.sydney.au.ethicalaivalidation.service;
+package com.sydney.au.ethicalaivalidation.service.impl;
 
 import com.sydney.au.ethicalaivalidation.domain.Users;
+import com.sydney.au.ethicalaivalidation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
