@@ -5,7 +5,6 @@ import com.sydney.au.ethicalaivalidation.entity.FeedbackMessage;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.service.SupplierService;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -215,12 +214,15 @@ public class SupplierServiceImpl implements SupplierService {
         }
         //通用流程
         Ethicalconcerns ethicalconcern = new Ethicalconcerns();
-        ethicalconcern.setProjectid(projectsRepository.findByProjectname(projectName).getId());
+        int projectId = projectsRepository.findByProjectname(projectName).getId();
+        ethicalconcern.setProjectid(projectId);
         ethicalconcern.setQuestionid(questionId);
         ethicalconcern.setSubquesid(subQuestionId);
         ethicalconcern.setAnswer(answer);
         ethicalconcern.setPoints(point);
         ethicalconcernsRepository.save(ethicalconcern);
+        res.put("projectid", projectId);
+        res.put("projectname", projectName);
         return res;
     }
 
