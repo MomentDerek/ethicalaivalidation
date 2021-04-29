@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Questionfeedback;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ public interface QuestionfeedbackRepository extends CrudRepository<Questionfeedb
 
     List<Questionfeedback> findByProjectidAndValidatoridAndSubquesid(Integer projectId, Integer validatorId, Integer subQuesId);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update questionfeedback set createdindex = ?4 ,content = ?5, feedbacktime=?6 where projectid = ?1 and validatorid = ?2 and subquesid = ?3")
     void updateByProjectIdAndValidatorIdAndSubquesid(Integer projectId, Integer validatorId, Integer subQuestionId, Integer createIndex, String comment, Timestamp feedbackTime);
 

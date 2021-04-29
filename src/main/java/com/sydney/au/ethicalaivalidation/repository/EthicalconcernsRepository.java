@@ -2,6 +2,7 @@ package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Ethicalconcerns;
 import io.swagger.models.auth.In;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,7 @@ public interface EthicalconcernsRepository extends CrudRepository<Ethicalconcern
 
     Ethicalconcerns findByProjectidAndSubquesid(Integer projectId, Integer subQuestionId);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update ethicalconcerns set finished = ?3 where projectid = ?1 and subquesid in (?2)")
     void updateFinishedByProjectIdAndSubquesid(Integer projectId, List<Integer> subQuestionId, Integer finished);
 

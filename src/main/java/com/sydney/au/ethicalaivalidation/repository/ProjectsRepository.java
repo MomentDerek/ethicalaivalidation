@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Projects;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ public interface ProjectsRepository extends CrudRepository<Projects, Integer> {
 
     List<Projects> findByStatus(Integer status);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update projects set status = ?2 where id = ?1")
     void updateStatusByProjectId(Integer projectId, Integer status);
 

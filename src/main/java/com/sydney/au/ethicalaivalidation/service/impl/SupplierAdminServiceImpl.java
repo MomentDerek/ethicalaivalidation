@@ -5,10 +5,12 @@ import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.service.SupplierAdminService;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class SupplierAdminServiceImpl implements SupplierAdminService {
 

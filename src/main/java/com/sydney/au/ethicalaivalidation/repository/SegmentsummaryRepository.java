@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Segmentsummary;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ public interface SegmentsummaryRepository extends CrudRepository<Segmentsummary,
 
     List<Segmentsummary> findByProjectidAndValidatoridAndSegmentidIn(Integer projectId, Integer validatorId, List<Integer> segmentId);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update segmentsummary set summary = ?4 ,createdtime = ?5 where projectid = ?1 and validatorid = ?2 and segmentid = ?3")
     void updateByProjectIdAndValidatorIdAndSubquesid(Integer projectId, Integer validatorId, Integer segmentId, String comment, Timestamp createTime);
 }

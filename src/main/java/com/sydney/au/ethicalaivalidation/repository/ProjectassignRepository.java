@@ -2,6 +2,7 @@ package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Projectassign;
 import com.sydney.au.ethicalaivalidation.domain.Projects;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,9 +24,11 @@ public interface ProjectassignRepository extends CrudRepository<Projectassign, I
 
     List<Projectassign> findByProjectid(Integer projectId);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update projectassign set locked = 1 where projectid = ?1 and supplierid = ?2")
     void unLockByProjectIdAndSupplierId(Integer projectId, Integer supplierId);
 
+    @Modifying
     @Query(nativeQuery = true, value = "update projectassign set locked = 2 , lockedquestion = ?3, lockedtime = ?4 where projectid = ?1 and supplierid = ?2")
     void lockByProjectIdAndSupplierId(Integer projectId, Integer supplierId, Integer lockedQuestion, Timestamp lockedTime);
 

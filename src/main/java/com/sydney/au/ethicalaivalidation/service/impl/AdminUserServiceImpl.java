@@ -4,9 +4,11 @@ import com.sydney.au.ethicalaivalidation.domain.Users;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.service.AdminUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+@Transactional
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
 

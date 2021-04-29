@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Principles;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.parameters.P;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Repository
 public interface PrinciplesRepository extends CrudRepository<Principles, Integer> {
 
+    @Modifying
     @Query(nativeQuery = true, value = "select distinct p.id,p.principlename from ((ethicalconcerns as e join questions q on q.id = e.questionid) join segments as s on q.segmentid = s.id) join principles as p on p.id = s.principleid where e.projectid = ?1")
     List<Principles> getPrincipleByProjectId(Integer projectId);
 

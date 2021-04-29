@@ -7,12 +7,14 @@ import com.sydney.au.ethicalaivalidation.service.SupplierService;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class SupplierServiceImpl implements SupplierService {
 

@@ -4,13 +4,13 @@ import com.sydney.au.ethicalaivalidation.domain.*;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.service.AdminProjectService;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class AdminProjectServiceImpl implements AdminProjectService {
 
