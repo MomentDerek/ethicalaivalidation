@@ -130,9 +130,13 @@ public class AdminProjectServiceImpl implements AdminProjectService {
                 leftSubQuestions.parallelStream()
                         .map(Subquestions::getQuestionid).distinct().collect(Collectors.toList()))
                 .parallelStream().collect(Collectors.toMap(Questions::getId, questions -> questions));
-        Map<Integer, Segments> leftSegmentMap = segmentsRepository.findByIdIn(new ArrayList<>(leftQuestionsMap.keySet()))
+        List<Integer> leftSegmentId = new ArrayList<>();
+        leftQuestionsMap.forEach((key, question) -> leftSegmentId.add(question.getSegmentid()));
+        Map<Integer, Segments> leftSegmentMap = segmentsRepository.findByIdIn(leftSegmentId)
                 .parallelStream().collect(Collectors.toMap(Segments::getId, segments -> segments));
-        Map<Integer, Principles> leftPrinciples = principlesRepository.findByIdIn(new ArrayList<>(leftSegmentMap.keySet()))
+        List<Integer> leftPrincipleId = new ArrayList<>();
+        leftSegmentMap.forEach((key, segment) -> leftPrincipleId.add(segment.getPrincipleid()));
+        Map<Integer, Principles> leftPrinciples = principlesRepository.findByIdIn(leftPrincipleId)
                 .stream().collect(Collectors.toMap(Principles::getId, principles -> principles));
         //构建结果
         return leftSubQuestions.parallelStream().map(subQuestion -> {
