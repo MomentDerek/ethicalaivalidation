@@ -164,7 +164,8 @@ public class AdminProjectServiceImpl implements AdminProjectService {
         //判断subquestion id是否有效 && projectName是否有效 && 该subquestion是否已加入
         if (!subQuesOptional.isPresent()
                 || project == null
-                || ethicalconcernsRepository.findByProjectidAndSubquesid(projectId, subQuesId).getProjectid() == projectId)
+                || project.getId() != projectId
+                || ethicalconcernsRepository.findByProjectidAndSubquesid(projectId, subQuesId) != null)
             return false;
         Ethicalconcerns ethicalConcern = new Ethicalconcerns();
         ethicalConcern.setProjectid(projectId);
