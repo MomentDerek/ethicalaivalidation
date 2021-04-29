@@ -54,7 +54,7 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Override
     public List<Map<String, Object>> getProjectList(String userName) {
         ArrayList<Map<String, Object>> projectList = new ArrayList<>();
-        projectsRepository.findByStatus(1).forEach(x -> {
+        projectsRepository.findByStatus(3).forEach(x -> {
             TreeMap<String, Object> project = new TreeMap<>();
             project.put("projectid", x.getId());
             project.put("projectname", x.getProjectname());
@@ -79,11 +79,14 @@ public class ValidatorServiceImpl implements ValidatorService {
             queIdSet.add(x.getQuestionid());
 
         });
-        List<Subquestions> subQuestionList = subquestionsRepository.findByQuestionidIn(new ArrayList<>(subQueIdSet));
-        List<Questions> questionList = questionsRepository.findBySegmentidIn(new ArrayList<>(queIdSet));
-        questionList.forEach(x -> {
-            segIdSet.add(x.getSegmentid());
-        });
+        List<Subquestions> subQuestionList = new ArrayList<>();
+        subquestionsRepository.findAllById(new ArrayList<>(subQueIdSet)).forEach(subQuestionList::add);
+        List<Questions> questionList = new ArrayList<>();
+        questionsRepository.findAllById(new ArrayList<>(queIdSet))
+                .forEach(x -> {
+                    questionList.add(x);
+                    segIdSet.add(x.getSegmentid());
+                });
         List<Segments> segmentList = segmentsRepository.findByIdIn(new ArrayList<>(segIdSet));
         segmentList.forEach(x -> {
             principleIdSet.add(x.getPrincipleid());
@@ -95,12 +98,9 @@ public class ValidatorServiceImpl implements ValidatorService {
         res.put("description", project.getDescription());
         res.put("creator", usersRepository.findById(project.getCreatorid()).get().getUsername());
         res.put("createdtime", project.getCreatedtime());
-        res.put("updatetime",
-                projectvalidationRepository.findByProjectidAndValidatorid(
-                        project.getId(),
-                        validator.getId()));
+        res.put("updatetime", validatorfeedbackRepository.findFirstByProjectidAndValidatoridOrderByCheckindexDesc(project.getId(), validator.getId()));
         //写principle的列表
-        ArrayList<TreeMap<String, Object>> content = new ArrayList<>();
+        List<TreeMap<String, Object>> content = new ArrayList<>();
         //构建principle
         principleList.forEach(principle -> {
             TreeMap<String, Object> principleMap = new TreeMap<>();
@@ -272,8 +272,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         validatorfeedbackRepository.save(new Validatorfeedback(validator.getId(), project.getId(), ServiceUtils.getNowTimeStamp(), createdindex));
         List<Questionfeedback> latestFeedback = questionFeedback.parallelStream()
                 .filter(feedback -> feedback.getCreatedindex() == createdindex).collect(Collectors.toList());
-        ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesid(project.getId(),latestFeedback.stream().map(Questionfeedback::getSubquesid).distinct().collect(Collectors.toList()), 1);
-        projectsRepository.updateStatusByProjectId(project.getId(),4);
+        ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesidIn(project.getId(), latestFeedback.stream().map(Questionfeedback::getSubquesid).distinct().collect(Collectors.toList()), 1);
+        projectsRepository.updateStatusByProjectId(project.getId(), 4);
         return true;
     }
 }

@@ -213,14 +213,19 @@ public class SupplierServiceImpl implements SupplierService {
             return res;
         }
         //通用流程
-        Ethicalconcerns ethicalconcern = new Ethicalconcerns();
         int projectId = projectsRepository.findByProjectname(projectName).getId();
-        ethicalconcern.setProjectid(projectId);
-        ethicalconcern.setQuestionid(questionId);
-        ethicalconcern.setSubquesid(subQuestionId);
-        ethicalconcern.setAnswer(answer);
-        ethicalconcern.setPoints(point);
-        ethicalconcernsRepository.save(ethicalconcern);
+        if (ethicalconcernsRepository.findByProjectidAndSubquesid(projectId, subQuestionId) == null) {
+            Ethicalconcerns ethicalconcern = new Ethicalconcerns();
+            ethicalconcern.setProjectid(projectId);
+            ethicalconcern.setQuestionid(questionId);
+            ethicalconcern.setSubquesid(subQuestionId);
+            ethicalconcern.setAnswer(answer);
+            ethicalconcern.setPoints(point);
+            ethicalconcernsRepository.save(ethicalconcern);
+        } else {
+            ethicalconcernsRepository.updateAnswerAndPointsByProjectIdAndSubQuesId(projectId,subQuestionId,answer,point);
+        }
+        ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesid(projectId,subQuestionId,2);
         res.put("projectid", projectId);
         res.put("projectname", projectName);
         return res;

@@ -211,9 +211,10 @@ public class AdminProjectServiceImpl implements AdminProjectService {
             projectvalidation.setValidatorid(validatorId);
             projectvalidation.setAssignedtime(ServiceUtils.getNowTimeStamp());
             projectvalidation.setChecknumber(0);
-            projectvalidation.setStatus(3);
+            projectvalidation.setStatus(1);
             return projectvalidation;
         }).collect(Collectors.toList()));
+        projectsRepository.updateStatusByProjectId(project.getId(),3);
         return true;
     }
 

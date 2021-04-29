@@ -26,8 +26,16 @@ public interface EthicalconcernsRepository extends CrudRepository<Ethicalconcern
     Ethicalconcerns findByProjectidAndSubquesid(Integer projectId, Integer subQuestionId);
 
     @Modifying
+    @Query(nativeQuery = true, value = "update ethicalconcerns set answer = ?3, points=?4 where projectid = ?1 and subquesid = ?2")
+    void updateAnswerAndPointsByProjectIdAndSubQuesId(Integer projectId,Integer subQuestionId,String answer,Integer points);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "update ethicalconcerns set finished = ?3 where projectid = ?1 and subquesid = ?2")
+    void updateFinishedByProjectIdAndSubquesid(Integer projectId, Integer subQuestionId, Integer finished);
+
+    @Modifying
     @Query(nativeQuery = true, value = "update ethicalconcerns set finished = ?3 where projectid = ?1 and subquesid in (?2)")
-    void updateFinishedByProjectIdAndSubquesid(Integer projectId, List<Integer> subQuestionId, Integer finished);
+    void updateFinishedByProjectIdAndSubquesidIn(Integer projectId, List<Integer> subQuestionId, Integer finished);
 
     void deleteByProjectidAndSubquesid(Integer projectId, Integer subQuesId);
 }

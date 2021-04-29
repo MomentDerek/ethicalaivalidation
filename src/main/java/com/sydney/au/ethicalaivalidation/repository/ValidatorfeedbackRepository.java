@@ -20,6 +20,8 @@ public interface ValidatorfeedbackRepository extends CrudRepository<Validatorfee
 
     List<Validatorfeedback> findByProjectidIn(List<Integer> projectIdList);
 
+    Validatorfeedback findFirstByProjectidAndValidatoridOrderByCheckindexDesc(Integer projectId, Integer validatorId);
+
     Validatorfeedback findByProjectidAndValidatoridAndSendtime(Integer projectId, Integer validatorId, Timestamp sendTime);
 
 }
