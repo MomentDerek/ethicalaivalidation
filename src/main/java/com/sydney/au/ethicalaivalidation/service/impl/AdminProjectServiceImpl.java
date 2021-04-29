@@ -185,7 +185,7 @@ public class AdminProjectServiceImpl implements AdminProjectService {
                 || project == null
                 || ethicalconcernsRepository.findByProjectidAndSubquesid(project.getId(), subQuesId) == null)
             return false;
-        ethicalconcernsRepository.deleteById(subQuesId);
+        ethicalconcernsRepository.deleteByProjectidAndSubquesid(project.getId(), subQuesId);
         return true;
     }
 
