@@ -25,6 +25,7 @@ public class AdminUserController {
     }
 
     private boolean checkIsNotAdmin(UserDetails userDetails) {
+        if (userDetails == null) return false;
         return !userService.getUserType(userDetails.getUsername()).equals(4);
     }
 
