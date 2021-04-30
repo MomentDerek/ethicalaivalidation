@@ -223,12 +223,11 @@ public class ValidatorServiceImpl implements ValidatorService {
             if (status.getStatus() == 1) isAllPassed.set(false);
         });
         if (!isAllPassed.get()) return false;
-        segmentsummaryRepository.updateByProjectIdAndValidatorIdAndSubquesid(
-                project.getId(),
-                validator.getId(),
-                segmentId,
-                comment,
-                ServiceUtils.getNowTimeStamp());
+        Optional<Segmentsummary> summaryOptional = segmentsummaryRepository.findByProjectidAndSegmentidAndValidatorid(project.getId(), segmentId, validator.getId());
+        if (summaryOptional.isPresent())
+            segmentsummaryRepository.updateByProjectIdAndValidatorIdAndSubquesid(project.getId(), validator.getId(), segmentId, comment, ServiceUtils.getNowTimeStamp());
+        else
+            segmentsummaryRepository.save(new Segmentsummary(project.getId(), validator.getId(), segmentId, comment, ServiceUtils.getNowTimeStamp()));
         return true;
     }
 
