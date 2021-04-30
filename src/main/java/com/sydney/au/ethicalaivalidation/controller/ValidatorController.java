@@ -50,7 +50,7 @@ public class ValidatorController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/{projectname}/addsummary")
+    @PostMapping("/{projectname}/addsummary")
     public @ResponseBody
     ResponseEntity<Object> addSummary(@PathVariable("projectname") String projectName,
                                       @RequestBody Map<String, Object> req,
