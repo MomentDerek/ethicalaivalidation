@@ -192,13 +192,10 @@ public class ValidatorServiceImpl implements ValidatorService {
         Users validator = usersRepository.findByUsername(validatorName);
         Projectvalidation projectValidation = projectvalidationRepository.findByProjectidAndValidatorid(project.getId(), validator.getId());
         int lastCheckIndex = projectValidation.getChecknumber();
-        questionfeedbackRepository.updateByProjectIdAndValidatorIdAndSubquesid(
-                project.getId(),
-                validator.getId(),
-                subQuestionId,
-                lastCheckIndex + 1,
-                comment,
-                ServiceUtils.getNowTimeStamp());
+        if (questionfeedbackRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subQuestionId).isEmpty())
+            questionfeedbackRepository.save(new Questionfeedback(project.getId(), validator.getId(), subQuestionId, lastCheckIndex + 1, comment, ServiceUtils.getNowTimeStamp()));
+        else
+            questionfeedbackRepository.updateByProjectIdAndValidatorIdAndSubquesid(project.getId(), validator.getId(), subQuestionId, lastCheckIndex + 1, comment, ServiceUtils.getNowTimeStamp());
 
         if (questionstatusRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subQuestionId).isPresent()) {
             questionstatusRepository.save(
