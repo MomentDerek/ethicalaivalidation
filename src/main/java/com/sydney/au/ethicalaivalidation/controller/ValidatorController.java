@@ -35,7 +35,7 @@ public class ValidatorController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/{projectname}/addcoment")
+    @PostMapping("/{projectname}/addcomment")
     public @ResponseBody
     ResponseEntity<Object> addComment(@PathVariable("projectname") String projectName,
                                       @RequestBody Map<String, Object> req,
