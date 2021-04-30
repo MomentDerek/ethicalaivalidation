@@ -235,8 +235,7 @@ public class ValidatorServiceImpl implements ValidatorService {
     public boolean passProject(String projectName, String validatorName) {
         Projects project = projectsRepository.findByProjectname(projectName);
         Users validator = usersRepository.findByUsername(validatorName);
-        List<Principles> principleList = principlesRepository.getPrincipleByProjectId(project.getId());
-        List<Segments> segmentList = segmentsRepository.findByPrincipleidIn(principleList.stream().map(Principles::getId).collect(Collectors.toList()));
+        List<Segments> segmentList = segmentsRepository.getSegmentsByProjectId(project.getId());
         List<Segmentsummary> summaryList = segmentsummaryRepository.findByProjectidAndValidatoridAndSegmentidIn(project.getId(), validator.getId(), segmentList.stream().map(Segments::getId).collect(Collectors.toList()));
         AtomicBoolean allFinish = new AtomicBoolean(true);
         segmentList.forEach(segments -> {

@@ -1,6 +1,7 @@
 package com.sydney.au.ethicalaivalidation.repository;
 
 import com.sydney.au.ethicalaivalidation.domain.Segments;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +24,9 @@ public interface SegmentsRepository extends CrudRepository<Segments, Integer> {
     List<Segments> findByIdIn(List<Integer> segmentId);
 
     Optional<Segments> findByPrincipleidAndSegmentname(Integer principleId, String segmentName);
+
+
+    @Query(nativeQuery = true, value = "select distinct s.id,s.principleid,s.segmentname from (ethicalconcerns as e join questions q on q.id = e.questionid) join segments as s on q.segmentid = s.id where e.projectid = ?1")
+    List<Segments> getSegmentsByProjectId(Integer projectId);
 
 }
