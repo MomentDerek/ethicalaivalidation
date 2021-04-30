@@ -141,7 +141,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                                         subQuestionMap.put("answer",
                                                 ethicalconcern.getAnswer());
                                         Optional<Questionstatus> questionStatusOptional = questionstatusRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subquestion.getId());
-                                        subQuestionMap.put("check", questionStatusOptional.isPresent() ? questionStatusOptional.get() : 0);
+                                        subQuestionMap.put("check", questionStatusOptional.map(Questionstatus::getStatus).orElse(0));
                                         List<Questionfeedback> feedback = questionfeedbackRepository.findByProjectidAndValidatoridAndSubquesid(
                                                 project.getId(), validator.getId(), subquestion.getId());
                                         ArrayList<TreeMap<String, Object>> comments = new ArrayList<>();
