@@ -201,7 +201,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         //设置ethical concern里的finish
         ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesid(project.getId(), subQuestionId, 1);
         //设置question status
-        if (questionstatusRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subQuestionId).isPresent()) {
+        if (!questionstatusRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subQuestionId).isPresent()) {
             questionstatusRepository.save(
                     new Questionstatus(project.getId(), validator.getId(), subQuestionId, pass ? 2 : 1));
         } else {
