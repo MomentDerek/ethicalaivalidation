@@ -206,7 +206,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                     new Questionstatus(project.getId(), validator.getId(), subQuestionId, pass ? 2 : 1));
         } else {
             questionstatusRepository.updateByProjectIdAndValidatorIdAndSubQuestionId(
-                    project.getId(), validator.getId(), subQuestionId, 1);
+                    project.getId(), validator.getId(), subQuestionId, pass ? 2 : 1);
         }
         return true;
     }
