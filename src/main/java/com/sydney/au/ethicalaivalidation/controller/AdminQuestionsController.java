@@ -185,8 +185,8 @@ public class AdminQuestionsController {
 
     @DeleteMapping("/{subquestionid}")
     public @ResponseBody
-    ResponseEntity<Object> updateSubQuestionDetail(@PathVariable("subquestionid") Integer subQuestionId,
-                                                   @AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<Object> deleteSubQuestion(@PathVariable("subquestionid") Integer subQuestionId,
+                                             @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         if (adminQuestionsService.deleteSubQuestion(subQuestionId)) return new ResponseEntity<>(HttpStatus.OK);
