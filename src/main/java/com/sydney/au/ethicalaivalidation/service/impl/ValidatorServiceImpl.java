@@ -54,7 +54,9 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Override
     public List<Map<String, Object>> getProjectList(String userName) {
         ArrayList<Map<String, Object>> projectList = new ArrayList<>();
-        projectsRepository.findByStatus(3).forEach(x -> {
+        List<Projects> projects = projectsRepository.findByStatus(3);
+        projects.addAll(projectsRepository.findByStatus(4));
+        projects.forEach(x -> {
             TreeMap<String, Object> project = new TreeMap<>();
             project.put("projectid", x.getId());
             project.put("projectname", x.getProjectname());
