@@ -194,10 +194,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         Projectvalidation projectValidation = projectvalidationRepository.findByProjectidAndValidatorid(project.getId(), validator.getId());
         int lastCheckIndex = projectValidation.getChecknumber();
         //写入评论到question feedback
-        if (questionfeedbackRepository.findByProjectidAndValidatoridAndSubquesid(project.getId(), validator.getId(), subQuestionId).isEmpty())
-            questionfeedbackRepository.save(new Questionfeedback(project.getId(), validator.getId(), subQuestionId, lastCheckIndex + 1, comment, ServiceUtils.getNowTimeStamp()));
-        else
-            questionfeedbackRepository.updateByProjectIdAndValidatorIdAndSubquesid(project.getId(), validator.getId(), subQuestionId, lastCheckIndex + 1, comment, ServiceUtils.getNowTimeStamp());
+        questionfeedbackRepository.save(new Questionfeedback(project.getId(), validator.getId(), subQuestionId, lastCheckIndex + 1, comment, ServiceUtils.getNowTimeStamp()));
         //设置ethical concern里的finish
         ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesid(project.getId(), subQuestionId, 1);
         //设置question status

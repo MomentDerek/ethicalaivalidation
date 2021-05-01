@@ -29,9 +29,12 @@ public class DatabaseInsert {
     private final ValidatorfeedbackRepository validatorfeedbackRepository;
     private final QuestionfeedbackRepository questionfeedbackRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final QuestionstatusRepository questionstatusRepository;
+    private final ProjectvalidationRepository projectvalidationRepository;
+    private final SegmentsummaryRepository segmentsummaryRepository;
 
     @Autowired
-    public DatabaseInsert(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider) {
+    public DatabaseInsert(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider, QuestionstatusRepository questionstatusRepository, ProjectvalidationRepository projectvalidationRepository, SegmentsummaryRepository segmentsummaryRepository) {
         this.usersRepository = usersRepository;
         this.projectassignRepository = projectassignRepository;
         this.projectsRepository = projectsRepository;
@@ -46,6 +49,9 @@ public class DatabaseInsert {
         this.validatorfeedbackRepository = validatorfeedbackRepository;
         this.questionfeedbackRepository = questionfeedbackRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.questionstatusRepository = questionstatusRepository;
+        this.projectvalidationRepository = projectvalidationRepository;
+        this.segmentsummaryRepository = segmentsummaryRepository;
     }
 
     String Name1 = "Test";
@@ -77,19 +83,35 @@ public class DatabaseInsert {
 
     @Test
     void deleteAll() {
+        // usersRepository.deleteAll();
+        // companyRepository.deleteAll();
+        //
+        // answerRepository.deleteAll();
+        // subquestionsRepository.deleteAll();
+        // questionsRepository.deleteAll();
+        // questiontypeRepository.deleteAll();
+        // segmentsRepository.deleteAll();
+        // principlesRepository.deleteAll();
+        answerRepository.deleteAll();
+        questionfeedbackRepository.deleteAll();
+        questionstatusRepository.deleteAll();
+        ethicalconcernsRepository.deleteAll();
+        projectassignRepository.deleteAll();
+        validatorfeedbackRepository.deleteAll();
+        projectassignRepository.deleteAll();
+        segmentsummaryRepository.deleteAll();
+        subquestionsRepository.deleteAll();
+        projectsRepository.deleteAll();
+        questiontypeRepository.deleteAll();
+        questionsRepository.deleteAll();
         usersRepository.deleteAll();
         companyRepository.deleteAll();
-
-        answerRepository.deleteAll();
-        subquestionsRepository.deleteAll();
-        questionsRepository.deleteAll();
-        questiontypeRepository.deleteAll();
         segmentsRepository.deleteAll();
         principlesRepository.deleteAll();
     }
 
     private void insertCompanys() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             Company company = new Company();
             company.setCompanyname(Name1 + i + "Company");
             companyList.add(company);
@@ -100,12 +122,41 @@ public class DatabaseInsert {
 
     private void insertUsers() {
         int index = 0;
-        for (Company company : companyList) {
-            for (int i = 0; i < 5; i++, index++) {
-                String salt = "emailsalt";
 
+
+        String salt = "emailsalt";
+        String password = "password";
+
+        //其他身份用户
+        for (int type : new int[]{1, 3, 4}) {
+            String username = Name1 + index;
+            String emailtoken = DigestUtils.md5DigestAsHex((username + salt).getBytes());
+            String passwordtoken = jwtTokenProvider.passwordToken(username);
+            String savedpassword = jwtTokenProvider.savedPasswordToken(password);
+
+            Users u = new Users();
+            u.setUsername(username);
+            u.setEmail(Name1 + index + "@gmail.com");
+            u.setPassword(savedpassword);
+            u.setCompanyid(companyList.get(0).getId());
+            u.setUsertype(type);
+            u.setFirstname(Name1 + index);
+            u.setLastname(Name2);
+            u.setAddress1("address1" + index + Name1);
+            u.setAddress2("address2" + index + Name2);
+            u.setPhone("" + index + index);
+            u.setCreatedtime(ServiceUtils.getNowTimeStamp());
+            u.setVerifiedemail(1);
+            u.setPasswordtoken(passwordtoken);
+            u.setEmailtoken(emailtoken);
+            u.setImage("defaultimage.png");
+            usersList.add(u);
+            index++;
+        }
+
+        for (Company company : companyList) {
+            for (int i = 0; i < 2; i++, index++) {
                 String username = Name1 + index;
-                String password = "password";
 
                 String emailtoken = DigestUtils.md5DigestAsHex((username + salt).getBytes());
                 String passwordtoken = jwtTokenProvider.passwordToken(username);
@@ -131,34 +182,6 @@ public class DatabaseInsert {
             }
         }
 
-        index++;
-        String salt = "emailsalt";
-
-        String username = Name1 + index;
-        String password = "password";
-
-        String emailtoken = DigestUtils.md5DigestAsHex((username + salt).getBytes());
-        String passwordtoken = jwtTokenProvider.passwordToken(username);
-        String savedpassword = jwtTokenProvider.savedPasswordToken(password);
-
-        Users u = new Users();
-        u.setUsername(username);
-        u.setEmail(Name1 + index + "@gmail.com");
-        u.setPassword(savedpassword);
-        u.setCompanyid(companyList.get(0).getId());
-        u.setUsertype(1);
-        u.setFirstname(Name1 + index);
-        u.setLastname(Name2);
-        u.setAddress1("address1" + index + Name1);
-        u.setAddress2("address2" + index + Name2);
-        u.setPhone("" + index + index);
-        u.setCreatedtime(ServiceUtils.getNowTimeStamp());
-        u.setVerifiedemail(1);
-        u.setPasswordtoken(passwordtoken);
-        u.setEmailtoken(emailtoken);
-        u.setImage("defaultimage.png");
-        usersList.add(u);
-
         usersRepository.saveAll(usersList);
         System.out.println("userList: " + usersList);
     }
@@ -175,7 +198,7 @@ public class DatabaseInsert {
 
     private void insertSegment() {
         for (Principles principle : principleList) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 2; i++) {
                 segmentList.add(new Segments(principle.getId(), "Segment-" + principle.getPrinciplename() + i));
             }
         }
@@ -185,7 +208,7 @@ public class DatabaseInsert {
 
     private void insertQuestion() {
         for (Segments segment : segmentList) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 questionList.add(new Questions(segment.getId(), "Quetion-" + segment.getSegmentname() + i));
             }
         }
@@ -201,13 +224,13 @@ public class DatabaseInsert {
 
     private void insertSubQuestion() {
         for (Questions question : questionList) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 2; i++) {
                 Subquestions subquestion = new Subquestions();
                 subquestion.setQuestionid(question.getId());
                 subquestion.setContent("subquestion test" + i + question.getQuestioncontent());
                 subquestion.setCreatedtime(ServiceUtils.getNowTimeStamp());
                 subquestion.setLevel(i);
-                subquestion.setQuestiontype(questionTypeList.get(i%2).getId());
+                subquestion.setQuestiontype(questionTypeList.get(i % 2).getId());
                 subQuestionList.add(subquestion);
             }
         }
@@ -223,6 +246,6 @@ public class DatabaseInsert {
             }
         }
         answerRepository.saveAll(answerList);
-        System.out.println("answerList: "+answerList);
+        System.out.println("answerList: " + answerList);
     }
 }
