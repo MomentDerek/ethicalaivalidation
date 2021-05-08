@@ -107,4 +107,16 @@ public class AdminProjectController {
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/{projectname}/summary")
+    public @ResponseBody
+    ResponseEntity<Object> summaryTheProject(@PathVariable("projectname") String projectName,
+                                             @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Map<String, Object> res = adminProjectService.summaryTheProject(projectName);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+
 }

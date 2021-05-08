@@ -17,4 +17,6 @@ public interface AdminProjectService {
     List<Map<String, Object>> listAllValidator(String projectName);
 
     boolean assignValidator(String projectName, List<Integer> userId);
+
+    Map<String, Object> summaryTheProject(String projectName);
 }
