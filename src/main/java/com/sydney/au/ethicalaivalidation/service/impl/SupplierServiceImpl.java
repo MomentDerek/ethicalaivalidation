@@ -30,8 +30,11 @@ public class SupplierServiceImpl implements SupplierService {
     private final AnswerRepository answerRepository;
     private final ValidatorfeedbackRepository validatorfeedbackRepository;
     private final QuestionfeedbackRepository questionfeedbackRepository;
+    private final ProjectvalidationRepository projectvalidationRepository;
+    private final SegmentsummaryRepository segmentsummaryRepository;
+    private final QuestionstatusRepository questionstatusRepository;
 
-    public SupplierServiceImpl(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository) {
+    public SupplierServiceImpl(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, ProjectvalidationRepository projectvalidationRepository, SegmentsummaryRepository segmentsummaryRepository, QuestionstatusRepository questionstatusRepository) {
         this.usersRepository = usersRepository;
         this.projectassignRepository = projectassignRepository;
         this.projectsRepository = projectsRepository;
@@ -45,6 +48,9 @@ public class SupplierServiceImpl implements SupplierService {
         this.answerRepository = answerRepository;
         this.validatorfeedbackRepository = validatorfeedbackRepository;
         this.questionfeedbackRepository = questionfeedbackRepository;
+        this.projectvalidationRepository = projectvalidationRepository;
+        this.segmentsummaryRepository = segmentsummaryRepository;
+        this.questionstatusRepository = questionstatusRepository;
     }
 
     @Override
@@ -333,6 +339,92 @@ public class SupplierServiceImpl implements SupplierService {
         }).collect(Collectors.toList()));
         res.put("createdtime", project.getCreatedtime());
         res.put("status", project.getStatus());
+        return res;
+    }
+
+    @Override
+    public Map<String, Object> getReport(String projectName) {
+        Projects project = projectsRepository.findByProjectname(projectName);
+        //查询所需数据
+        //创建用户Map
+        List<Integer> supplierIds = projectassignRepository.findByProjectid(project.getId()).parallelStream().map(Projectassign::getSupplierid).distinct().collect(Collectors.toList());
+        List<Integer> validatorIds = projectvalidationRepository.findByProjectid(project.getId()).parallelStream().map(Projectvalidation::getValidatorid).distinct().collect(Collectors.toList());
+        Map<Integer, String> userNameMap = new HashMap<>();
+        usersRepository.findAllById(new ArrayList<Integer>() {{
+            addAll(supplierIds);
+            addAll(validatorIds);
+        }}).forEach(user -> userNameMap.put(user.getId(), user.getUsername()));
+        //创建ethicalconcerns的list和缓存Map
+        List<Ethicalconcerns> ethicalconcernsList = ethicalconcernsRepository.findByProjectid(project.getId());
+        Map<Integer, Ethicalconcerns> ethicalconcernsMap = ethicalconcernsList.parallelStream().collect(Collectors.toMap(Ethicalconcerns::getSubquesid, ethicalconcerns -> ethicalconcerns));
+        //创建subquestions的缓存Map
+        Map<Integer, Subquestions> subquestionsMap = new HashMap<Integer, Subquestions>() {{
+            subquestionsRepository.findAllById(ethicalconcernsMap.keySet()).forEach(x -> put(x.getId(), x));
+        }};
+        //创建summary的缓存Map
+        Map<Integer, Segmentsummary> segmentsummaryMap = new HashMap<Integer, Segmentsummary>() {{
+            segmentsummaryRepository.findByProjectid(project.getId()).forEach(x -> put(x.getSegmentid(), x));
+        }};
+        //创建answer的缓存Map
+        Map<Integer, Answer> answerMap = new HashMap<Integer, Answer>() {{
+            answerRepository.findAllById(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getSubquesid).distinct().collect(Collectors.toList()))
+                    .forEach(x -> {
+                        if (x.getPoint() > get(x.getSubquesid()).getPoint())
+                            put(x.getSubquesid(), x);
+                    });
+        }};
+        //创建questions的list和缓存Map
+        List<Questions> questionsList = questionsRepository.findByIdIn(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getQuestionid).collect(Collectors.toList()));
+        Map<Integer, Questions> questionsMap = questionsList.parallelStream().collect(Collectors.toMap(Questions::getId, questions -> questions));
+        //创建segments的list和缓存Map
+        List<Segments> segmentsList = segmentsRepository.findByIdIn(questionsList.parallelStream().map(Questions::getSegmentid).collect(Collectors.toList()));
+        Map<Integer, Segments> segmentsMap = segmentsList.parallelStream().collect(Collectors.toMap(Segments::getId, segments -> segments));
+        //创建principles的list
+        List<Principles> principlesList = principlesRepository.findByIdIn(segmentsList.parallelStream().map(Segments::getPrincipleid).collect(Collectors.toList()));
+
+        //开始构建结果
+        Map<String, Object> res = new TreeMap<>();
+        res.put("projectname", project.getProjectname());
+        res.put("description", project.getDescription());
+        res.put("createdtime", project.getCreatedtime());
+        res.put("creator", usersRepository.findById(project.getCreatorid()).get());
+
+        List<Map<String, Object>> contentList = new ArrayList<>();
+        principlesList.parallelStream().forEach(principle -> {
+            Map<String, Object> summaryMap = new TreeMap<>();
+            summaryMap.put("principle", principle.getPrinciplename());
+            List<Map<String, Object>> principleContentList = new ArrayList<>();
+            segmentsList.parallelStream().forEach(segment -> {
+                if (segment.getPrincipleid() != principle.getId()) return;
+                Map<String, Object> principleContentMap = new TreeMap<>();
+                principleContentMap.put("segment", segment.getSegmentname());
+                principleContentMap.put("summary", segmentsummaryMap.get(segment.getId()));
+                List<Map<String, Object>> segmentContentList = new ArrayList<>();
+                questionsList.parallelStream().forEach(question -> {
+                    if (question.getSegmentid() != segment.getId()) return;
+                    Map<String, Object> segmentContentMap = new TreeMap<>();
+                    segmentContentMap.put("question", question.getQuestioncontent());
+                    List<Map<String, Object>> questionContentList = new ArrayList<>();
+                    ethicalconcernsList.parallelStream().forEach(ethicalconcern -> {
+                        if (ethicalconcern.getQuestionid() != question.getId()) return;
+                        Map<String, Object> questionContentMap = new TreeMap<>();
+                        Subquestions subquestions = subquestionsMap.get(ethicalconcern.getSubquesid());
+                        questionContentMap.put("subquestion", subquestions.getContent());
+                        questionContentMap.put("level", subquestions.getLevel());
+                        questionContentMap.put("youranswer", ethicalconcern.getAnswer());
+                        questionContentMap.put("point", ethicalconcern.getPoints());
+                        questionContentList.add(questionContentMap);
+                    });
+                    segmentContentMap.put("questioncontent", questionContentList);
+                    segmentContentList.add(segmentContentMap);
+                });
+                principleContentMap.put("segmentcontent", segmentContentList);
+                principleContentList.add(principleContentMap);
+            });
+            summaryMap.put("principlecontent", principleContentList);
+            contentList.add(summaryMap);
+        });
+        res.put("content", contentList);
         return res;
     }
 

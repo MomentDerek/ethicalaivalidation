@@ -1,7 +1,5 @@
 package com.sydney.au.ethicalaivalidation.service;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +23,5 @@ public interface SupplierService {
 
     Map<String, Object> getAssignFeedback(String projectName);
 
+    Map<String, Object> getReport(String projectName);
 }

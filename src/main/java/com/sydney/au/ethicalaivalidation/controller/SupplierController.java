@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author: Moment on 7/4/2021
@@ -96,8 +95,9 @@ public class SupplierController {
 
     //Show a report after the project's status is finished.
     @GetMapping(path = "/report/{projectname}")
-    public @ResponseBody ResponseEntity<Map> getReport() {
-        Map<String, String> res = new TreeMap<>();
+    public @ResponseBody
+    ResponseEntity<Map> getReport(@PathVariable("projectname") String projectName) {
+        Map<String, Object> res = supplierService.getReport(projectName);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
