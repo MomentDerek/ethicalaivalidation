@@ -239,7 +239,7 @@ public class AdminProjectServiceImpl implements AdminProjectService {
         }};
         //创建summary的缓存Map
         Map<Integer, Segmentsummary> segmentsummaryMap = new HashMap<Integer, Segmentsummary>() {{
-            segmentsummaryRepository.findByProjectId(project.getId()).forEach(x -> put(x.getSegmentid(), x));
+            segmentsummaryRepository.findByProjectid(project.getId()).forEach(x -> put(x.getSegmentid(), x));
         }};
         //创建answer的缓存Map
         Map<Integer, Answer> answerMap = new HashMap<Integer, Answer>() {{

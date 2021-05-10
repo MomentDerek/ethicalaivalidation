@@ -29,5 +29,5 @@ public interface SegmentsummaryRepository extends CrudRepository<Segmentsummary,
     void updateByProjectIdAndValidatorIdAndSubquesid(Integer projectId, Integer validatorId, Integer segmentId, String comment, Timestamp createTime);
 
 
-    Collection<Segmentsummary> findByProjectId(int id);
+    Collection<Segmentsummary> findByProjectid(int id);
 }
