@@ -108,7 +108,7 @@ public class AdminProjectController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/{projectname}/summary")
+    @GetMapping("/{projectname}/summary")
     public @ResponseBody
     ResponseEntity<Object> summaryTheProject(@PathVariable("projectname") String projectName,
                                              @AuthenticationPrincipal UserDetails userDetails) {
