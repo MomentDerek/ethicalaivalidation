@@ -118,5 +118,15 @@ public class AdminProjectController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @GetMapping("/{projectname}/process")
+    public @ResponseBody
+    ResponseEntity<Object> getProjectProcess(@PathVariable("projectname") String projectName,
+                                             @AuthenticationPrincipal UserDetails userDetails) {
+        if (checkIsNotAdmin(userDetails))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Map<String, Object> res = adminProjectService.summaryTheProject(projectName);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
 
 }

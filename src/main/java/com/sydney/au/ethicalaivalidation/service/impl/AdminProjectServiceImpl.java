@@ -243,9 +243,9 @@ public class AdminProjectServiceImpl implements AdminProjectService {
         }};
         //创建answer的缓存Map
         Map<Integer, Answer> answerMap = new HashMap<Integer, Answer>() {{
-            answerRepository.findAllById(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getSubquesid).distinct().collect(Collectors.toList()))
+            answerRepository.findBySubquesidIn(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getSubquesid).distinct().collect(Collectors.toList()))
                     .forEach(x -> {
-                        if (x.getPoint() > get(x.getSubquesid()).getPoint())
+                        if (x.getPoint() > Optional.ofNullable(get(x.getSubquesid())).orElse(new Answer()).getPoint())
                             put(x.getSubquesid(), x);
                     });
         }};
@@ -334,5 +334,99 @@ public class AdminProjectServiceImpl implements AdminProjectService {
 
         return res;
     }
+
+    @Override
+    public Map<String, Object> getProjectProcess(String projectName) {
+        Projects project = projectsRepository.findByProjectname(projectName);
+        //查询所需数据
+        //创建用户Map
+        List<Integer> supplierIds = projectassignRepository.findByProjectid(project.getId()).parallelStream().map(Projectassign::getSupplierid).distinct().collect(Collectors.toList());
+        List<Integer> validatorIds = projectvalidationRepository.findByProjectid(project.getId()).parallelStream().map(Projectvalidation::getValidatorid).distinct().collect(Collectors.toList());
+        Map<Integer, String> userNameMap = new HashMap<>();
+        usersRepository.findAllById(new ArrayList<Integer>() {{
+            addAll(supplierIds);
+            addAll(validatorIds);
+        }}).forEach(user -> userNameMap.put(user.getId(), user.getUsername()));
+        //创建ethicalconcerns的list和缓存Map
+        List<Ethicalconcerns> ethicalconcernsList = ethicalconcernsRepository.findByProjectid(project.getId());
+        Map<Integer, Ethicalconcerns> ethicalconcernsMap = ethicalconcernsList.parallelStream().collect(Collectors.toMap(Ethicalconcerns::getSubquesid, ethicalconcerns -> ethicalconcerns));
+        //创建subquestions的缓存Map
+        Map<Integer, Subquestions> subquestionsMap = new HashMap<Integer, Subquestions>() {{
+            subquestionsRepository.findAllById(ethicalconcernsMap.keySet()).forEach(x -> put(x.getId(), x));
+        }};
+        //创建summary的缓存Map
+        Map<Integer, Segmentsummary> segmentsummaryMap = new HashMap<Integer, Segmentsummary>() {{
+            segmentsummaryRepository.findByProjectid(project.getId()).forEach(x -> put(x.getSegmentid(), x));
+        }};
+        //创建answer的缓存Map
+        Map<Integer, Answer> answerMap = new HashMap<Integer, Answer>() {{
+            answerRepository.findBySubquesidIn(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getSubquesid).distinct().collect(Collectors.toList()))
+                    .forEach(x -> {
+                        if (x.getPoint() > Optional.ofNullable(get(x.getSubquesid())).orElse(new Answer()).getPoint())
+                            put(x.getSubquesid(), x);
+                    });
+        }};
+        //创建questions的list和缓存Map
+        List<Questions> questionsList = questionsRepository.findByIdIn(ethicalconcernsList.parallelStream().map(Ethicalconcerns::getQuestionid).collect(Collectors.toList()));
+        Map<Integer, Questions> questionsMap = questionsList.parallelStream().collect(Collectors.toMap(Questions::getId, questions -> questions));
+        //创建segments的list和缓存Map
+        List<Segments> segmentsList = segmentsRepository.findByIdIn(questionsList.parallelStream().map(Questions::getSegmentid).collect(Collectors.toList()));
+        Map<Integer, Segments> segmentsMap = segmentsList.parallelStream().collect(Collectors.toMap(Segments::getId, segments -> segments));
+        //创建principles的list
+        List<Principles> principlesList = principlesRepository.findByIdIn(segmentsList.parallelStream().map(Segments::getPrincipleid).collect(Collectors.toList()));
+
+        //开始构建结果
+        Map<String, Object> res = new TreeMap<>();
+        Map<String, Object> projectMap = new TreeMap<>();
+        projectMap.put("projectname", project.getProjectname());
+        projectMap.put("description", project.getDescription());
+        projectMap.put("createdtime", project.getCreatedtime());
+        projectMap.put("finishedtime", project.getFinishedtime());
+        projectMap.put("creator", usersRepository.findById(project.getCreatorid()).get());
+        projectMap.put("assignedsupplier", supplierIds.parallelStream().map(userNameMap::get).collect(Collectors.toList()));
+        projectMap.put("assignedvalidator", validatorIds.parallelStream().map(userNameMap::get).collect(Collectors.toList()));
+        res.put("project", projectMap);
+
+        List<Map<String, Object>> summaryList = new ArrayList<>();
+        principlesList.parallelStream().forEach(principle -> {
+            Map<String, Object> summaryMap = new TreeMap<>();
+            summaryMap.put("principle", principle.getPrinciplename());
+            List<Map<String, Object>> principleContentList = new ArrayList<>();
+            segmentsList.parallelStream().forEach(segment -> {
+                if (segment.getPrincipleid() != principle.getId()) return;
+                Map<String, Object> principleContentMap = new TreeMap<>();
+                principleContentMap.put("segment", segment.getSegmentname());
+                principleContentMap.put("segmentcomment", segmentsummaryMap.get(segment.getId()));
+                List<Map<String, Object>> segmentContentList = new ArrayList<>();
+                questionsList.parallelStream().forEach(question -> {
+                    if (question.getSegmentid() != segment.getId()) return;
+                    Map<String, Object> segmentContentMap = new TreeMap<>();
+                    segmentContentMap.put("question", question.getQuestioncontent());
+                    List<Map<String, Object>> questionContentList = new ArrayList<>();
+                    ethicalconcernsList.parallelStream().forEach(ethicalconcern -> {
+                        if (ethicalconcern.getQuestionid() != question.getId()) return;
+                        Map<String, Object> questionContentMap = new TreeMap<>();
+                        Subquestions subquestions = subquestionsMap.get(ethicalconcern.getSubquesid());
+                        questionContentMap.put("subquestion", subquestions.getContent());
+                        questionContentMap.put("type", subquestions.getQuestiontype());
+                        questionContentMap.put("answer", answerMap.get(ethicalconcern.getSubquesid()).getAnswer());
+                        questionContentMap.put("youranswer", ethicalconcern.getAnswer());
+                        questionContentList.add(questionContentMap);
+                    });
+                    segmentContentMap.put("questioncontent", questionContentList);
+                    segmentContentList.add(segmentContentMap);
+                });
+                principleContentMap.put("segmentcontent", segmentContentList);
+                principleContentList.add(principleContentMap);
+            });
+            summaryMap.put("principlecontent", principleContentList);
+            summaryList.add(summaryMap);
+        });
+
+        res.put("summary", summaryList);
+
+        return res;
+    }
+
 
 }

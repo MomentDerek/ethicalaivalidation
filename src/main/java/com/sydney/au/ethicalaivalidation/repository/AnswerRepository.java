@@ -23,4 +23,6 @@ public interface AnswerRepository extends CrudRepository<Answer, Integer> {
     @Modifying
     @Query(nativeQuery = true, value = "update answer set answer =?2 where subquesid = ?1")
     void updateAnswerBySubQuestionId(Integer subQuestionId, Integer answer);
+
+    List<Answer> findBySubquesidIn(List<Integer> subQuestionIdList);
 }

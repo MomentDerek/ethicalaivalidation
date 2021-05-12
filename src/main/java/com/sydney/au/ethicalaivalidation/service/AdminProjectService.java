@@ -19,4 +19,6 @@ public interface AdminProjectService {
     boolean assignValidator(String projectName, List<Integer> userId);
 
     Map<String, Object> summaryTheProject(String projectName);
+
+    Map<String, Object> getProjectProcess(String projectName);
 }
