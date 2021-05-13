@@ -124,7 +124,7 @@ public class AdminProjectController {
                                              @AuthenticationPrincipal UserDetails userDetails) {
         if (checkIsNotAdmin(userDetails))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        Map<String, Object> res = adminProjectService.summaryTheProject(projectName);
+        Map<String, Object> res = adminProjectService.getProjectProcess(projectName);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
