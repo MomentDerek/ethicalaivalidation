@@ -260,6 +260,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         Projects project = projectsRepository.findByProjectname(projectName);
         Users validator = usersRepository.findByUsername(validatorName);
         List<Questionfeedback> questionFeedback = questionfeedbackRepository.findByProjectidAndValidatorid(project.getId(), validator.getId());
+        Map<Integer, Questionstatus> questionStatusMap = questionstatusRepository.findByProjectidAndSubquesidIn(project.getId(), questionFeedback.stream().map(Questionfeedback::getSubquesid).collect(Collectors.toList()))
+                .parallelStream().collect(Collectors.toMap(Questionstatus::getSubquesid, x -> x));
         int createdindex = questionFeedback
                 .stream().max((a, b) -> a.getCreatedindex() > b.getCreatedindex() ? 1 : -1).get()
                 .getCreatedindex();
@@ -270,7 +272,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         validatorfeedbackRepository.save(new Validatorfeedback(validator.getId(), project.getId(), ServiceUtils.getNowTimeStamp(), createdindex));
         List<Questionfeedback> latestFeedback = questionFeedback.parallelStream()
                 .filter(feedback -> feedback.getCreatedindex() == createdindex).collect(Collectors.toList());
-        ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesidIn(project.getId(), latestFeedback.stream().map(Questionfeedback::getSubquesid).distinct().collect(Collectors.toList()), 1);
+        ethicalconcernsRepository.updateFinishedByProjectIdAndSubquesidIn(project.getId(), latestFeedback.stream().map(Questionfeedback::getSubquesid).filter(x -> questionStatusMap.get(x).getStatus() != 2).distinct().collect(Collectors.toList()), 1);
         projectsRepository.updateStatusByProjectId(project.getId(), 4);
         return true;
     }
