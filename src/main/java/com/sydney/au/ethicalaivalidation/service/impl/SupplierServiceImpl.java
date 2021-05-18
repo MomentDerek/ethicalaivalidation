@@ -149,10 +149,10 @@ public class SupplierServiceImpl implements SupplierService {
         Map<String, Object> res = new TreeMap<>();
         //获取supplier和project
         Users supplier = usersRepository.findByUsername(userName);
-        Projects projects = projectsRepository.findByProjectname(projectName);
+        Projects project = projectsRepository.findByProjectname(projectName);
         //去projectassign上锁
         projectassignRepository.lockByProjectIdAndSupplierId(
-                projects.getId(),
+                project.getId(),
                 supplier.getId(),
                 Integer.parseInt(questionId),
                 ServiceUtils.getNowTimeStamp());
@@ -165,14 +165,31 @@ public class SupplierServiceImpl implements SupplierService {
         String questionContent = question.getQuestioncontent();
         String subQuesContent = subquestion.getContent();
         int questionType = questiontypeRepository.findById(subquestion.getQuestiontype()).get().getType();
+        //获取评论
+        ArrayList<TreeMap<String, Object>> comments = new ArrayList<>();
+        List<Questionfeedback> feedback = questionfeedbackRepository.findByProjectidAndSubquesid(
+                project.getId(), subquestion.getId());
+        //判断feedback的记录不为空
+        if (feedback != null) {
+            //构建comment
+            for (Questionfeedback questionfeedback : feedback) {
+                TreeMap<String, Object> comment = new TreeMap<>();
+                comment.put("commenter", usersRepository.findById(questionfeedback.getValidatorid()).get().getUsername());
+                comment.put("comment", questionfeedback.getContent());
+                comment.put("commenttime", questionfeedback.getFeedbacktime());
+                comments.add(comment);
+            }
+        }
         //构建结果
-        res.put("projectid", projects.getId());
+        res.put("projectid", project.getId());
         res.put("subquesid", subquesId);
         res.put("principle", principleName);
         res.put("segment", segmentName);
         res.put("questioncontent", questionContent);
         res.put("subquescontent", subQuesContent);
         res.put("questiontype", questionType);
+        //插入comment
+        res.put("quescomment", comments);
         return res;
     }
 
