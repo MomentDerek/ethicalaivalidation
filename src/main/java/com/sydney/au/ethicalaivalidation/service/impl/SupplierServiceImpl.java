@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -293,7 +295,7 @@ public class SupplierServiceImpl implements SupplierService {
         Projects project = projectsRepository.findByProjectname(projectName);
         Users validator = usersRepository.findByUsername(validatorName);
         int checkIndex = validatorfeedbackRepository
-                .findByProjectidAndValidatoridAndSendtime(project.getId(), validator.getId(), Timestamp.valueOf(feedbackTime)).getCheckindex();
+                .findByProjectidAndValidatoridAndSendtime(project.getId(), validator.getId(), Timestamp.valueOf(LocalDateTime.parse(feedbackTime, DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm:ss")))).getCheckindex();
         //获取该版本的所有子问题反馈
         List<Questionfeedback> questionFeedbackList = questionfeedbackRepository.findByProjectidAndValidatoridAndCreatedindex(project.getId(), validator.getId(), checkIndex);
         List<Map<String, Object>> res = new ArrayList<>();
@@ -301,7 +303,7 @@ public class SupplierServiceImpl implements SupplierService {
             //查询信息
             //todo 此处可用map缓存优化
             Subquestions subquestion = subquestionsRepository.findById(x.getSubquesid()).get();
-            Questions question = questionsRepository.findById(x.getProjectid()).get();
+            Questions question = questionsRepository.findById(subquestion.getQuestionid()).get();
             Segments segment = segmentsRepository.findById(question.getSegmentid()).get();
             String principleName = principlesRepository.findById(segment.getPrincipleid()).get().getPrinciplename();
             Ethicalconcerns ethicalConcern = ethicalconcernsRepository.findByProjectidAndSubquesid(project.getId(), subquestion.getId());
