@@ -1,0 +1,417 @@
+[
+  {
+    "principleName": "Transparency",
+    "segments": [
+      {
+        "segmentName": "Traceability",
+        "questions": [
+          {
+            "questionContent": "Does the supplier document the information on the method of training the algorithm, including which input data was gathered and selected, and how this occurred?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Are there documents recording the information on the method of training the algorithm?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "Which input data was used for training?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How the data was gathered?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the data was split for training?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the data was preprocessed for training?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Does the Supplier document the information about the data used to test and validate?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs there a document recording the information about the data used to test and validate?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the data was gathered?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the data was selected?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What test and validation approaches were used?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Does the supplier document the outcomes of or decisions taken by the algorithm?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs there a document recording the outcomes of or decisions taken by the algorithm?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow were outcomes or decisions recorded?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Communication",
+        "questions": [
+          {
+            "questionContent": "Does the supplier clearly communicate characteristics, limitations, risks and potential shortcomings of the AI system?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tDoes the supplier communicate the characteristics of the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the characteristics were communicated?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are the characteristics?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tDoes the supplier communicate the limitation of the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How the limitations were communicated?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are limitations?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tDoes the supplier communicate the risk of the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow the risks were communicated?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are risks?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Explainability",
+        "questions": [
+          {
+            "questionContent": "Does the supplier provide an explanation as to why the system took a certain choice resulting in a certain outcome that all users can understand?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs there an explanation provided on system outputs?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are the explanation methods?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow users can access explanations?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Faithfulness of explanation:",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Are relevance scores in explanations indicative of \"true\" importance?",
+                "type": 2
+              }
+            ]
+          },
+          {
+            "questionContent": "Monotonicity of explanation:",
+            "subQuestions": [
+              {
+                "subQuestionContent": " Whether adding more positive evidence increases the probability of classification in the specified class?",
+                "type": 2
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "principleName": "Fairness",
+    "segments": [
+      {
+        "segmentName": "Bias avoidance",
+        "questions": [
+          {
+            "questionContent": "Data bias:",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Does the supplier use the un-biased data?",
+                "type": 2
+              }
+            ]
+          },
+          {
+            "questionContent": "Model bias:",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Does the supplier establish a strategy or a set of procedures to avoid creating or reinforcing bias in the AI system?  (Whether the AI system provides a set of procedures to avoid creating or reinforcing unfair bias?)",
+                "type": 2
+              }
+            ]
+          },
+          {
+            "questionContent": "Model stability:",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Does the supplier put in place processes to test and monitor for potential biases during the development and deployment phase of the system? (Whether the bias solutions are stable for different data?)",
+                "type": 2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Accessibility and universal design",
+        "questions": [
+          {
+            "questionContent": "Does the supplier involve or consult the community during the development phase of the AI system?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs the community involved or consulted during the development phase of the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tIs the community’s involvement or consultation documented?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWho are involved or consulted?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are comments from the community?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Does the supplier assess whether the customer team involved in building the AI system is representative of target customer audience?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs the customer team involved in modelling/ developing/ training/ assessing the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow is the customer team membership arrived at (with relation to representation and diversity)?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow does the customer team assess and respond to the AI system in this phase?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Is the initial customer team representative of the wider population, considering also of other groups who might tangentially be impacted?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs people beyond direct customer who minght tangentially be affected be involved in the testing?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow are people beyond direct customer involved?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "segmentName": "Stakeholder participation",
+            "questions": [
+              {
+                "questionContent": "Does the supplier consider a mechanism to include the participation of different stakeholders in the AI system’s development and use?",
+                "subQuestions": [
+                  {
+                    "subQuestionContent": "•\tAre different stakeholders included in the AI system’s development and use?",
+                    "type": 1
+                  },
+                  {
+                    "subQuestionContent": "•\tAre the involvement activities of different stakeholder documented?",
+                    "type": 1
+                  },
+                  {
+                    "subQuestionContent": "•\tWho are stakeholders involved?",
+                    "type": 1
+                  },
+                  {
+                    "subQuestionContent": "•\tWhat are their activities?",
+                    "type": 1
+                  },
+                  {
+                    "subQuestionContent": "•\tHow is user feedback sought?",
+                    "type": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "principleName": "Accountability",
+    "segments": [
+      {
+        "segmentName": "Auditability",
+        "questions": [
+          {
+            "questionContent": "Does the supplier establish mechanisms that facilitate the system’s auditability, such as ensuring traceability and logging of the AI system’s processes and outcomes?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tIs there a mechanism/s that facilitates audit of the AI systems processes and outcomes?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are these mechanisms, and which systems do they log?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow do they link to algorithm versions and data sets?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow does a user revisit a historic decision?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Minimising and reporting negative impact",
+        "questions": [
+          {
+            "questionContent": "Does the supplier carry out a risk or impact assessment of the AI system, which takes into account different stakeholders that are (in)directly affected?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tHas a formal impact assessment been done on the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhich stakeholders are considered in the assessment?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow are key risks assessed?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat are the results of the assessment?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Does the supplier establish processes for users to report potential vulnerabilities, risks or biases in the AI system?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tCan a user report potential vulnerabilities, risks or biases in the AI system?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow can a user do this?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Documenting trade-offs",
+        "questions": [
+          {
+            "questionContent": "Does the supplier establish a mechanism to identify relevant interests and values implicated by the AI system and potential trade-offs between them?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tDoes the supplier document “trade-offs” inherent in the approaches taken to address problems AI solved?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tPlease identify deliberate and identified (as a side-effect) “trade-offs” and summarise impact and justification.",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Ability to redress",
+        "questions": [
+          {
+            "questionContent": "Does the supplier establish an adequate set of mechanisms that allows for redress in case of the occurrence of any harm or adverse impact?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tDoes the supplier have mechanisms to allow redress following cases of harm or adverse impact?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tWhat instances of harm/adverse impact can be redressed, and what mechanism for each?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow does the mechanism provide redress?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow does the mechanism prevent from recurring?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "principleName": "Privacy",
+    "segments": [
+      {
+        "segmentName": "Respect for privacy and data protection",
+        "questions": [
+          {
+            "questionContent": "Does the AI system take measures to enhance privacy, such as via encryption, anonymisation and aggregation?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "•\tDoes the AI take measures to enhance privacy?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "•\tHow were the measures determined to be adequate and sufficient?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
