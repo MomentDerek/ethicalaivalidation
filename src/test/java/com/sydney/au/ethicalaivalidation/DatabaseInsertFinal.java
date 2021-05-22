@@ -1,5 +1,7 @@
 package com.sydney.au.ethicalaivalidation;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sydney.au.ethicalaivalidation.domain.*;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.security.JwtTokenProvider;
@@ -9,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.DigestUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class DatabaseInsertFinal {
@@ -31,11 +35,10 @@ public class DatabaseInsertFinal {
     private final QuestionfeedbackRepository questionfeedbackRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final QuestionstatusRepository questionstatusRepository;
-    private final ProjectvalidationRepository projectvalidationRepository;
     private final SegmentsummaryRepository segmentsummaryRepository;
 
     @Autowired
-    public DatabaseInsertFinal(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider, QuestionstatusRepository questionstatusRepository, ProjectvalidationRepository projectvalidationRepository, SegmentsummaryRepository segmentsummaryRepository) {
+    public DatabaseInsertFinal(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider, QuestionstatusRepository questionstatusRepository, SegmentsummaryRepository segmentsummaryRepository) {
         this.usersRepository = usersRepository;
         this.projectassignRepository = projectassignRepository;
         this.projectsRepository = projectsRepository;
@@ -51,7 +54,6 @@ public class DatabaseInsertFinal {
         this.questionfeedbackRepository = questionfeedbackRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.questionstatusRepository = questionstatusRepository;
-        this.projectvalidationRepository = projectvalidationRepository;
         this.segmentsummaryRepository = segmentsummaryRepository;
     }
 
@@ -60,32 +62,72 @@ public class DatabaseInsertFinal {
 
     List<Company> companyList = new ArrayList<>();
     List<Users> usersList = new ArrayList<>();
-
-    List<Principles> principleList = new ArrayList<>();
-    List<Segments> segmentList = new ArrayList<>();
-    List<Questions> questionList = new ArrayList<>();
     List<Questiontype> questionTypeList = new ArrayList<>();
-    List<Subquestions> subQuestionList = new ArrayList<>();
-    List<Answer> answerList = new ArrayList<>();
 
-    class PrincipleInfo {
-        String principleName;
-        List<Map<String, Object>> segments;
+
+    @Test
+    void insertQuestionsByJson() throws Exception {
+        deleteAll();
+        insertQuestionType();
+        InputStream jsonStream = this.getClass().getResourceAsStream("/data/data.json");
+        assert jsonStream != null;
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(jsonStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        String text = stringBuilder.toString();
+
+        JSONArray principlesJson = JSONArray.parseArray(text);
+
+        for (int principleIndex = 0; principleIndex < principlesJson.size(); principleIndex++) {
+            JSONObject principleJson = principlesJson.getJSONObject(principleIndex);
+            Principles principle = new Principles();
+            principle.setPrinciplename(principleJson.getString("principleName"));
+            principlesRepository.save(principle);
+            int principleId = principle.getId();
+            JSONArray segmentsJson = principleJson.getJSONArray("segments");
+            for (int segmentIndex = 0; segmentIndex < segmentsJson.size(); segmentIndex++) {
+                JSONObject segmentJson = segmentsJson.getJSONObject(segmentIndex);
+                Segments segment = new Segments();
+                segment.setPrincipleid(principleId);
+                segment.setSegmentname(segmentJson.getString("segmentName"));
+                segmentsRepository.save(segment);
+                int segmentId = segment.getId();
+                JSONArray questionsJson = segmentJson.getJSONArray("questions");
+                for (int questionIndex = 0; questionIndex < questionsJson.size(); questionIndex++) {
+                    JSONObject questionJson = questionsJson.getJSONObject(questionIndex);
+                    Questions question = new Questions();
+                    question.setSegmentid(segmentId);
+                    question.setQuestioncontent(questionJson.getString("questionContent"));
+                    questionsRepository.save(question);
+                    System.out.println(question.getId());
+                    int questionId = question.getId();
+                    JSONArray subQuestionsJson = questionJson.getJSONArray("subQuestions");
+                    for (int subQuesIndex = 0; subQuesIndex < subQuestionsJson.size(); subQuesIndex++) {
+                        JSONObject subQuestionJson = subQuestionsJson.getJSONObject(subQuesIndex);
+                        Subquestions subQuestion = new Subquestions();
+                        subQuestion.setContent(subQuestionJson.getString("subQuestionContent"));
+                        subQuestion.setLevel(subQuesIndex);
+                        subQuestion.setQuestionid(questionId);
+                        subQuestion.setCreatedtime(ServiceUtils.getNowTimeStamp());
+                        subQuestion.setQuestiontype(questionTypeList.get(subQuestionJson.getInteger("type")).getId());
+                        System.out.println(subQuestion);
+                        subquestionsRepository.save(subQuestion);
+                    }
+                }
+            }
+        }
     }
 
 
     @Test
-    void test() {
+    void test() throws Exception {
         deleteAll();
         insertCompanys();
         insertUsers();
-
-        insertPrinciple();
-        insertSegment();
-        insertQuestion();
-        insertQuestionType();
-        insertSubQuestion();
-        insertAnswer();
+        insertQuestionsByJson();
     }
 
     @Test
@@ -184,66 +226,10 @@ public class DatabaseInsertFinal {
         System.out.println("userList: " + usersList);
     }
 
-    private void insertPrinciple() {
-        principleList.add(new Principles("Transparency"));
-        principleList.add(new Principles("Fairness"));
-        principleList.add(new Principles("Accountability"));
-        principleList.add(new Principles("Privacy"));
-
-        principlesRepository.saveAll(principleList);
-        System.out.println("principleList: " + principleList);
-    }
-
-    private void insertSegment() {
-        for (Principles principle : principleList) {
-            for (int i = 0; i < 2; i++) {
-                segmentList.add(new Segments(principle.getId(), "Segment-" + principle.getPrinciplename() + i));
-            }
-        }
-        segmentsRepository.saveAll(segmentList);
-        System.out.println("segmentList: " + segmentList);
-    }
-
-    private void insertQuestion() {
-        for (Segments segment : segmentList) {
-            for (int i = 0; i < 2; i++) {
-                questionList.add(new Questions(segment.getId(), "Quetion-" + segment.getSegmentname() + i));
-            }
-        }
-        questionsRepository.saveAll(questionList);
-        System.out.println("questionList: " + questionList);
-    }
-
     private void insertQuestionType() {
-        questionTypeList.add(new Questiontype(1));
-        questionTypeList.add(new Questiontype(2));
+        questionTypeList.add(new Questiontype());
+        questionTypeList.add(1, new Questiontype(1));
+        questionTypeList.add(2, new Questiontype(2));
         questiontypeRepository.saveAll(questionTypeList);
-    }
-
-    private void insertSubQuestion() {
-        for (Questions question : questionList) {
-            for (int i = 0; i < 2; i++) {
-                Subquestions subquestion = new Subquestions();
-                subquestion.setQuestionid(question.getId());
-                subquestion.setContent("subquestion test" + i + question.getQuestioncontent());
-                subquestion.setCreatedtime(ServiceUtils.getNowTimeStamp());
-                subquestion.setLevel(i);
-                subquestion.setQuestiontype(questionTypeList.get(i % 2).getId());
-                subQuestionList.add(subquestion);
-            }
-        }
-        subquestionsRepository.saveAll(subQuestionList);
-        System.out.println("subquestionsList: " + subQuestionList);
-    }
-
-    private void insertAnswer() {
-        for (Subquestions subquestions : subQuestionList) {
-            if (subquestions.getQuestiontype() == 2) continue;
-            for (int i = 0; i < 3; i++) {
-                answerList.add(new Answer(subquestions.getId(), i, i));
-            }
-        }
-        answerRepository.saveAll(answerList);
-        System.out.println("answerList: " + answerList);
     }
 }

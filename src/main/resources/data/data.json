@@ -242,34 +242,34 @@
                 "type": 1
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "segmentName": "Stakeholder participation",
+        "questions": [
           {
-            "segmentName": "Stakeholder participation",
-            "questions": [
+            "questionContent": "Does the supplier consider a mechanism to include the participation of different stakeholders in the AI system’s development and use?",
+            "subQuestions": [
               {
-                "questionContent": "Does the supplier consider a mechanism to include the participation of different stakeholders in the AI system’s development and use?",
-                "subQuestions": [
-                  {
-                    "subQuestionContent": "Are different stakeholders included in the AI system’s development and use?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "Are the involvement activities of different stakeholder documented?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "Who are stakeholders involved?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What are their activities?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How is user feedback sought?",
-                    "type": 1
-                  }
-                ]
+                "subQuestionContent": "Are different stakeholders included in the AI system’s development and use?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "Are the involvement activities of different stakeholder documented?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "Who are stakeholders involved?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What are their activities?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How is user feedback sought?",
+                "type": 1
               }
             ]
           }
@@ -430,98 +430,98 @@
                 "type": 1
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "segmentName": "Quality and integrity of data",
+        "questions": [
           {
-            "segmentName": "Quality and integrity of data",
-            "questions": [
+            "questionContent": "Does the supplier align the AI system with relevant standards (for example ISO, IEEE, GDPR) or widely adopted protocols for daily data management and governance?",
+            "subQuestions": [
               {
-                "questionContent": "Does the supplier align the AI system with relevant standards (for example ISO, IEEE, GDPR) or widely adopted protocols for daily data management and governance?",
-                "subQuestions": [
-                  {
-                    "subQuestionContent": "Are there the relevant standards or protocols used?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What standards or protocols were used?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What measures were taken to make sure standards or protocols were aligned?",
-                    "type": 1
-                  }
-                ]
+                "subQuestionContent": "Are there the relevant standards or protocols used?",
+                "type": 1
               },
               {
-                "questionContent": "Does the supplier put in place processes to ensure the quality and integrity of data? How is the supplier verifying that data sets have not been compromised or hacked?",
-                "subQuestions": [
-                  {
-                    "subQuestionContent": "Does a data quality and integrity process exist?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "Does the process check against an external source to ensure the quality and integrity of data?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What source of truth is used to establish ongoing consistency?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How is consistency confirmed?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How are inconsistencies managed?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How do we verify that a data set has not been compromised or hacked?",
-                    "type": 1
-                  }
-                ]
+                "subQuestionContent": "What standards or protocols were used?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What measures were taken to make sure standards or protocols were aligned?",
+                "type": 1
               }
             ]
           },
           {
-            "segmentName": "Access to data",
-            "questions": [
+            "questionContent": "Does the supplier put in place processes to ensure the quality and integrity of data? How is the supplier verifying that data sets have not been compromised or hacked?",
+            "subQuestions": [
               {
-                "questionContent": "Does the supplier ensure an oversight mechanism to log when, where, how, by whom and for what purpose data was accessed?",
-                "subQuestions": [
-                  {
-                    "subQuestionContent": "Does an access oversight mechanism exist?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What information is logged?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How are the logs managed (created, stored) and how do invalid accesses get identified (notification or review, to/by whom)?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How is access to data withdrawn (staff or system off-boarding)?",
-                    "type": 1
-                  }
-                ]
+                "subQuestionContent": "Does a data quality and integrity process exist?",
+                "type": 1
               },
               {
-                "questionContent": "Does the supplier have the process and/or infrastructure to restrict access to user data?",
-                "subQuestions": [
-                  {
-                    "subQuestionContent": "Do processes/infrastructure to restrict access to user data exist?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "What are the processes/infrastructure implemented to restrict access to user data?",
-                    "type": 1
-                  },
-                  {
-                    "subQuestionContent": "How do the implemented processes/ infrastructure restrict access to user data?",
-                    "type": 1
-                  }
-                ]
+                "subQuestionContent": "Does the process check against an external source to ensure the quality and integrity of data?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What source of truth is used to establish ongoing consistency?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How is consistency confirmed?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How are inconsistencies managed?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How do we verify that a data set has not been compromised or hacked?",
+                "type": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "segmentName": "Access to data",
+        "questions": [
+          {
+            "questionContent": "Does the supplier ensure an oversight mechanism to log when, where, how, by whom and for what purpose data was accessed?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Does an access oversight mechanism exist?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What information is logged?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How are the logs managed (created, stored) and how do invalid accesses get identified (notification or review, to/by whom)?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How is access to data withdrawn (staff or system off-boarding)?",
+                "type": 1
+              }
+            ]
+          },
+          {
+            "questionContent": "Does the supplier have the process and/or infrastructure to restrict access to user data?",
+            "subQuestions": [
+              {
+                "subQuestionContent": "Do processes/infrastructure to restrict access to user data exist?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "What are the processes/infrastructure implemented to restrict access to user data?",
+                "type": 1
+              },
+              {
+                "subQuestionContent": "How do the implemented processes/ infrastructure restrict access to user data?",
+                "type": 1
               }
             ]
           }

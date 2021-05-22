@@ -69,4 +69,13 @@ public class Segments {
     public int hashCode() {
         return Objects.hash(id, principleid, segmentname);
     }
+
+    @Override
+    public String toString() {
+        return "Segments{" +
+                "id=" + id +
+                ", principleid=" + principleid +
+                ", segmentname='" + segmentname + '\'' +
+                '}';
+    }
 }

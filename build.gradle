@@ -51,13 +51,10 @@ dependencies {
 
 	// added by myself
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.1'
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.3.5.RELEASE'
-
+	implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.76'
 }
 
 test {
