@@ -118,7 +118,7 @@ public class AdminProjectController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/{projectname}/process")
+    @GetMapping("/{projectname}/progress")
     public @ResponseBody
     ResponseEntity<Object> getProjectProcess(@PathVariable("projectname") String projectName,
                                              @AuthenticationPrincipal UserDetails userDetails) {

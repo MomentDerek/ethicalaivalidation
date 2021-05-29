@@ -135,7 +135,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                                 if (subquestion.getQuestionid() == question.getId()) {
                                     TreeMap<String, Object> subQuestionMap = new TreeMap<>();
                                     subQuestionMap.put("subquesid", subquestion.getId());
-                                    subQuestionMap.put("subquestion", subquestion.getId());
+                                    subQuestionMap.put("subquestion", subquestion.getContent());
                                     Ethicalconcerns ethicalconcern = ethicalconcernsRepository.findByProjectidAndSubquesid(
                                             project.getId(), subquestion.getId());
                                     //判断ethicalconcern的记录不为空
