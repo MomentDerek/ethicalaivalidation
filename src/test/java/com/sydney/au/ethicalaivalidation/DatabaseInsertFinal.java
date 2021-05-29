@@ -9,6 +9,8 @@ import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.io.BufferedReader;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
+@Rollback(false)
 public class DatabaseInsertFinal {
 
     private final UsersRepository usersRepository;
@@ -67,7 +70,6 @@ public class DatabaseInsertFinal {
 
     @Test
     void insertQuestionsByJson() throws Exception {
-        deleteAll();
         insertQuestionType();
         InputStream jsonStream = this.getClass().getResourceAsStream("/data/data.json");
         assert jsonStream != null;
@@ -150,7 +152,8 @@ public class DatabaseInsertFinal {
         principlesRepository.deleteAll();
     }
 
-    private void insertCompanys() {
+    @Test
+    void insertCompanys() {
         for (int i = 0; i < 2; i++) {
             Company company = new Company();
             company.setCompanyname(Name1 + i + "Company");
@@ -160,7 +163,8 @@ public class DatabaseInsertFinal {
         System.out.println("companyList: " + companyList);
     }
 
-    private void insertUsers() {
+    @Test
+    void insertUsers() {
         int index = 0;
 
 
@@ -223,6 +227,7 @@ public class DatabaseInsertFinal {
         }
 
         usersRepository.saveAll(usersList);
+        usersRepository.findAll().forEach(System.out::println);
         System.out.println("userList: " + usersList);
     }
 

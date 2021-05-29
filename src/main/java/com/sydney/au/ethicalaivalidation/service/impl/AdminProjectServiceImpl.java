@@ -409,7 +409,8 @@ public class AdminProjectServiceImpl implements AdminProjectService {
                         Subquestions subquestions = subquestionsMap.get(ethicalconcern.getSubquesid());
                         questionContentMap.put("subquestion", subquestions.getContent());
                         questionContentMap.put("type", subquestions.getQuestiontype());
-                        questionContentMap.put("answer", answerMap.get(ethicalconcern.getSubquesid()).getAnswer());
+                        Answer answer = answerMap.get(ethicalconcern.getSubquesid());
+                        questionContentMap.put("answer", answer==null?new Answer().getAnswer():answer.getAnswer());
                         questionContentMap.put("youranswer", ethicalconcern.getAnswer());
                         questionContentList.add(questionContentMap);
                     });
