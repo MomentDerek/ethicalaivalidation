@@ -2,6 +2,7 @@ package com.sydney.au.ethicalaivalidation;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.sydney.au.ethicalaivalidation.domain.*;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.security.JwtTokenProvider;
@@ -9,44 +10,53 @@ import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
+@SpringBootTest(properties = {"spring.datasource.url=jdbc:mysql://localhost:3306/?serverTimezone=UTC&useUnicode=true&zeroDateTimeBehavior=convertToNull"})
 @Rollback(false)
 public class DatabaseInsertFinal {
 
-    private final UsersRepository usersRepository;
-    private final ProjectassignRepository projectassignRepository;
-    private final ProjectsRepository projectsRepository;
+    @Autowired
+    private Environment environment;
+
+    private final AnswerRepository answerRepository;
     private final CompanyRepository companyRepository;
     private final EthicalconcernsRepository ethicalconcernsRepository;
-    private final QuestionsRepository questionsRepository;
-    private final SegmentsRepository segmentsRepository;
-    private final QuestiontypeRepository questiontypeRepository;
-    private final SubquestionsRepository subquestionsRepository;
     private final PrinciplesRepository principlesRepository;
-    private final AnswerRepository answerRepository;
-    private final ValidatorfeedbackRepository validatorfeedbackRepository;
+    private final ProjectassignRepository projectassignRepository;
+    private final ProjectsRepository projectsRepository;
+    private final ProjectvalidationRepository projectvalidationRepository;
     private final QuestionfeedbackRepository questionfeedbackRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final QuestionsRepository questionsRepository;
     private final QuestionstatusRepository questionstatusRepository;
+    private final QuestiontypeRepository questiontypeRepository;
+    private final SegmentsRepository segmentsRepository;
     private final SegmentsummaryRepository segmentsummaryRepository;
+    private final SubquestionsRepository subquestionsRepository;
+    private final UsersRepository usersRepository;
+    private final ValidatorfeedbackRepository validatorfeedbackRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private DataSource dataSource;
 
     @Autowired
-    public DatabaseInsertFinal(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider, QuestionstatusRepository questionstatusRepository, SegmentsummaryRepository segmentsummaryRepository) {
+    public DatabaseInsertFinal(UsersRepository usersRepository, ProjectassignRepository projectassignRepository, ProjectsRepository projectsRepository, CompanyRepository companyRepository, EthicalconcernsRepository ethicalconcernsRepository, ProjectvalidationRepository projectvalidationRepository, QuestionsRepository questionsRepository, SegmentsRepository segmentsRepository, QuestiontypeRepository questiontypeRepository, SubquestionsRepository subquestionsRepository, PrinciplesRepository principlesRepository, AnswerRepository answerRepository, ValidatorfeedbackRepository validatorfeedbackRepository, QuestionfeedbackRepository questionfeedbackRepository, JwtTokenProvider jwtTokenProvider, QuestionstatusRepository questionstatusRepository, SegmentsummaryRepository segmentsummaryRepository, DataSource dataSource) {
         this.usersRepository = usersRepository;
         this.projectassignRepository = projectassignRepository;
         this.projectsRepository = projectsRepository;
         this.companyRepository = companyRepository;
         this.ethicalconcernsRepository = ethicalconcernsRepository;
+        this.projectvalidationRepository = projectvalidationRepository;
         this.questionsRepository = questionsRepository;
         this.segmentsRepository = segmentsRepository;
         this.questiontypeRepository = questiontypeRepository;
@@ -58,6 +68,7 @@ public class DatabaseInsertFinal {
         this.jwtTokenProvider = jwtTokenProvider;
         this.questionstatusRepository = questionstatusRepository;
         this.segmentsummaryRepository = segmentsummaryRepository;
+        this.dataSource = dataSource;
     }
 
     String Name1 = "Test";
@@ -67,6 +78,18 @@ public class DatabaseInsertFinal {
     List<Users> usersList = new ArrayList<>();
     List<Questiontype> questionTypeList = new ArrayList<>();
 
+    @Test
+    void test() throws Exception {
+        deleteAll();
+        MysqlDataSource mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setUrl("jdbc:mysql://localhost:3306/ethicalaivalidation?serverTimezone=UTC&useUnicode=true&zeroDateTimeBehavior=convertToNull");
+        mysqlDataSource.setUser(environment.getProperty("spring.datasource.username"));
+        mysqlDataSource.setUser(environment.getProperty("spring.datasource.password"));
+        dataSource = mysqlDataSource;
+        insertCompanys();
+        insertUsers();
+        insertQuestionsByJson();
+    }
 
     @Test
     void insertQuestionsByJson() throws Exception {
@@ -82,6 +105,8 @@ public class DatabaseInsertFinal {
         String text = stringBuilder.toString();
 
         JSONArray principlesJson = JSONArray.parseArray(text);
+
+        List<Answer> answerList = new ArrayList<>();
 
         for (int principleIndex = 0; principleIndex < principlesJson.size(); principleIndex++) {
             JSONObject principleJson = principlesJson.getJSONObject(principleIndex);
@@ -114,42 +139,27 @@ public class DatabaseInsertFinal {
                         subQuestion.setLevel(subQuesIndex);
                         subQuestion.setQuestionid(questionId);
                         subQuestion.setCreatedtime(ServiceUtils.getNowTimeStamp());
-                        subQuestion.setQuestiontype(questionTypeList.get(subQuestionJson.getInteger("type")).getId());
+                        int type = questionTypeList.get(subQuestionJson.getInteger("type")).getType();
+                        subQuestion.setQuestiontype(type);
                         System.out.println(subQuestion);
                         subquestionsRepository.save(subQuestion);
+                        if (type == 1) {
+                            answerList.add(new Answer(subQuestion.getId(), 1, 0));
+                        }
                     }
                 }
             }
         }
-    }
 
-
-    @Test
-    void test() throws Exception {
-        deleteAll();
-        insertCompanys();
-        insertUsers();
-        insertQuestionsByJson();
+        answerRepository.saveAll(answerList);
     }
 
     @Test
     void deleteAll() {
-        answerRepository.deleteAll();
-        questionfeedbackRepository.deleteAll();
-        questionstatusRepository.deleteAll();
-        ethicalconcernsRepository.deleteAll();
-        projectassignRepository.deleteAll();
-        validatorfeedbackRepository.deleteAll();
-        projectassignRepository.deleteAll();
-        segmentsummaryRepository.deleteAll();
-        subquestionsRepository.deleteAll();
-        projectsRepository.deleteAll();
-        questiontypeRepository.deleteAll();
-        questionsRepository.deleteAll();
-        usersRepository.deleteAll();
-        companyRepository.deleteAll();
-        segmentsRepository.deleteAll();
-        principlesRepository.deleteAll();
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new FileSystemResource("src/main/resources/database/database create statement.sql"));
+        resourceDatabasePopulator.execute(dataSource);
+
     }
 
     @Test
@@ -166,7 +176,6 @@ public class DatabaseInsertFinal {
     @Test
     void insertUsers() {
         int index = 0;
-
 
         String salt = "emailsalt";
         String password = "password";
