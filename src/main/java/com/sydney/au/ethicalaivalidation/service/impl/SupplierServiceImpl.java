@@ -5,6 +5,7 @@ import com.sydney.au.ethicalaivalidation.entity.FeedbackMessage;
 import com.sydney.au.ethicalaivalidation.repository.*;
 import com.sydney.au.ethicalaivalidation.service.SupplierService;
 import com.sydney.au.ethicalaivalidation.utils.ServiceUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
+@Slf4j
 public class SupplierServiceImpl implements SupplierService {
 
     private final UsersRepository usersRepository;
